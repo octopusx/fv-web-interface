@@ -1,41 +1,33 @@
 <?php 
 
 class fv_iface{
-  //The names of the methods that can be invoked on the flowvisor using the json api
-	public $GET_SLICE_LIST = "list-slices";//"getSliceList";
+	//The names of the methods that can be invoked on the flowvisor using the json api
+	//Configuration API
+	public $GET_SLICE_LIST = "list-slices";
 	public $CREATE_SLICE = "add-slice";
 	public $UPDATE_SLICE = "update-slice";
 	public $REMOVE_SLICE = "remove-slice";
-	public $GET_SLICE_INFO = "getSliceInfo";
-	public $GET_SLICE_STATS = "getSliceStats";
-	public $UPDATE_PASSWORD = "updatePasswd";
-	public $UPDATE_ADMIN_PASSWORD = "updateAdminPasswd";
-	public $GET_DATAPATH_STATS = "getDatapathStats";
-	public $GET_DATAPATH_FLOW_DB = "getDatapathFlowDB";
-	public $GET_FLOW_SPACE = "getFlowSpace";
-	public $REMOVE_FLOW_SPACE = "removeFlowSpace";
-	public $ADD_FLOW_SPACE = "removeFlowSpace";
-	public $UPDATE_FLOW_SPACE = "updateFlowSpace";
-	public $GET_DATAPATHS = "getDatapaths";
-	public $GET_DATAPATH_INFO = "getDatapathInfo";
-	public $GET_LINKS = "getLinks";
-	public $PING = "ping";
-	public $REGISTER_CALLBACK = "registerCallback";
-	public $UNREGISTER_CALLBACK = "unregisterCallback";
-	public $SET_FLOOD_PERMISSION = "setFloodPerm";
-	public $GET_FLOOD_PERMISSION = "getFloodPerm";
-	public $SET_LOGGING_FACILITY = "setLoggingFacility";
-	public $GET_LOGGING_FACILITY = "getLoggingFacility";
-	public $SET_LOGGING_IDENTIFIER = "setLoggingIdent";
-	public $GET_LOGGING_IDENTIFIER = "getLoggingIdent";
-	public $SET_FLOW_TRACKING = "setFlowTracking";
-	public $GET_FLOW_TRACKING = "getFlowTracking";
-	public $SET_STATS_DESCRIPTION = "setStatsDescription";
-	public $GET_STATS_DESCRIPTOPN = "getStatsDescription";
-	public $SET_DROP_POLICY = "setDropPolicy";
-	public $GET_DROP_POLICY = "getDropPolicy";
-	public $SET_RECEIVE_LLDP = "setRecvLLDP";
-	public $GET_RECEIVE_LLDP = "getRecvLLDP";
+	public $UPDATE_SLICE_PWD = "update-slice-password";
+	public $GET_FLOWSPACE_LIST = "list-flowspace";
+	public $CREATE_FLOWSPACE = "add-flowspace";
+	public $REMOVE_FLOWSPACE = "remove-flowspace";
+	public $UPDATE_FLOWSPACE = "update-flowspace";
+	public $GET_VERSION = "list-version";
+	public $SET_CONFIG = "set-config";
+	public $GET_CONFIG = "get-config";
+	public $SAVE_CONFIG = "save-config";
+
+	//Monitoring API
+	public $GET_SLICE_INFO = "list-slice-info";
+	public $GET_DATAPATHS = "list-datapaths";
+	public $GET_LINKS = "list-links";
+	public $GET_DATAPATH_INFO = "list-datapath-info";
+	public $GET_SLICE_STATS = "list-slice-stats";
+	public $GET_DATAPATH_STATS = "list-datapath-stats";
+	public $GET_FV_HEALTH = "list-fv-health";
+	public $GET_SLICE_HEALTH = "list-slice-health";
+	public $REGISTER_EVENT_CALLBACK = "register-event-callback";
+	public $UNREGISTER_EVENT_CALLBACK = "unregister-event-callback";
 
 	private $request_count = 0;
 	private $user = "fvadmin";
