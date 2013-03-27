@@ -3,9 +3,9 @@
 class fv_iface{
   //The names of the methods that can be invoked on the flowvisor using the json api
 	public $GET_SLICE_LIST = "list-slices";//"getSliceList";
-	public $CREATE_SLICE = "createSlice";
-	public $UPDATE_SLICE = "updateSlice";
-	public $REMOVE_SLICE = "removeSlice";
+	public $CREATE_SLICE = "add-slice";
+	public $UPDATE_SLICE = "update-slice";
+	public $REMOVE_SLICE = "remove-slice";
 	public $GET_SLICE_INFO = "getSliceInfo";
 	public $GET_SLICE_STATS = "getSliceStats";
 	public $UPDATE_PASSWORD = "updatePasswd";
