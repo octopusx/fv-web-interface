@@ -197,6 +197,33 @@ class fv_iface{
 		return json_decode($result,true); 
 	}
 
+	// updates the password of a given slice
+	function updateSlicePassword($name, $pwd){
+
+		//check for any null pointers
+		if($name==null || $pwd==null){
+			return null;
+		}
+
+		//create the parameter array
+		$params = array("slice-name"=>$name,
+			"password"=>$pwd);
+		//creating the request 
+		$request = array("jsonrpc"=>"2.0",
+			"method"=>$this->UPDATE_SLICE,
+			"id"=>$this->request_count,
+			"params"=>$params);
+
+		//increase the request id count
+		$this->request_count++;
+		//encode the array in to a json string
+		$this->requestJson = json_encode($request);
+		//send the json request
+		$result = $this->send($this->requestJson);
+		//decode the result and return it
+		return json_decode($result,true); 	
+	}
+
 
 	//this function will be used to post the json messages to the api
 	function send($json){
