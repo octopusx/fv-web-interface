@@ -30,6 +30,10 @@
 		var_dump($fv_test->getSliceList());
 	?><br>
 	<?
+		var_dump($fv_test->updateSlicePassword("test","dupa"));
+
+	?><br>
+	<?
 		var_dump($fv_test->deleteSlice("test"));
 
 	?>
