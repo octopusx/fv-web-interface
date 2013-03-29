@@ -58,8 +58,9 @@ class fv_iface{
 	}
 
 	// creates a slice with all the appropriate parameters
+	// return null if anything goes wrong
 	// $name - slice name
-	// $crtl_url - url of the controler to be pointed at
+	// $ctrl_url - url of the controler to be pointed at
 	// $admin_email - the contact email address of the admin responsible for the slice
 	// $pwd - slice password
 	// $drop_policy - policy for droping packets: "exact" (default) or "rule"
@@ -67,17 +68,36 @@ class fv_iface{
 	// $flowmod_limit - a number, defaults to -1
 	// $rate_limit - number, defaults to -1
 	// $admin_status - boolean, defaults to true
-	function createSlice($name, $crtl_url, $admin_email, $pwd, $drop_policy, $recv_lldp, $flowmod_limit, $rate_limit, $admin_status){
+	function createSlice($name, $ctrl_url, $admin_email, $pwd, $drop_policy, $recv_lldp, $flowmod_limit, $rate_limit, $admin_status){
+		//test if any of the non-optional variables are null	
+		if($name==null || $ctrl_url==null || $admin_email==null || $pwd==null){
+			return null;
+		}
+
 		//create the parameter array
 		$params = array("slice-name"=>$name,
-			"controller-url"=>$crtl_url,
+			"controller-url"=>$ctrl_url,
 			"admin-contact"=>$admin_email,
-			"password"=>$pwd,
-			"drop-policy"=>$drop_policy,
-			"recv-lldp"=>$recv_lldp,
-			"flowmod-limit"=>$flowmod_limit,
-			"rate-limit"=>$rate_limit,
-			"admin-status"=>$admin_status);
+			"password"=>$pwd);
+
+		//add any optional variables if they are null
+		if($drop_policy!=null){
+			$temp = array("drop-policy"=>$drop_policy);
+			$params = array_merge((array)$params, (array)$temp);
+		}
+		if($recv_lldp!=null){
+			$temp = array("recv-lldp"=>$recv_lldp);
+			$params = array_merge((array)$params, (array)$temp);
+		}
+		if($rate_limit!=null){
+			$temp = array("rate-limit"=>$rate_limit);
+			$params = array_merge((array)$params, (array)$temp);
+		}
+		if($admin_status!=null){
+			$temp = array("admin-status"=>$admin_status);
+			$params = array_merge((array)$params, (array)$temp);
+		}
+
 		//compile the request
 		$request = array("jsonrpc"=>"2.0",
 			"method"=>$this->CREATE_SLICE,
