@@ -18,7 +18,19 @@
 
 
 		$fv_test = new fv_iface;
+		var_dump($fv_test->createSlice("test","tcp:6633","octopusx@o2.pl","pass","exact",false,-1,-1,true));
+	?><br>
+	<?
 		var_dump($fv_test->getSliceList());
+	?><br>
+	<?
+		var_dump($fv_test->updateSlice("test",null,6634,"octopusx@o2.pl",null,null,null,null,null));
+	?><br>
+	<?
+		var_dump($fv_test->getSliceList());
+	?><br>
+	<?
+		var_dump($fv_test->deleteSlice("test"));
 
 	?>
 </body></html>

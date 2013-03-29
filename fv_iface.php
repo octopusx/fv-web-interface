@@ -32,7 +32,7 @@ class fv_iface{
 	private $request_count = 0;
 	private $user = "fvadmin";
 	private $pwd = "flowvisor";
-
+	private $serv = "https://192.168.0.9:8080";
 
 	function fv_iface(){
 		
@@ -97,7 +97,7 @@ class fv_iface{
 	// $name - slice name
 	function deleteSlice($name){
 		//create the parameter array
-		$params = array("slice-name"=>$name,
+		$params = array("slice-name"=>$name);
 		//compile the request
 		$request = array("jsonrpc"=>"2.0",
 			"method"=>$this->REMOVE_SLICE,
@@ -113,11 +113,75 @@ class fv_iface{
 		return json_decode($result,true);
 	}
 
+	// updates a chosen slice
+	// all variables except name and email address are optiona
+	// no password field taken
+	// returns null if anything goes wrong
+	// name		- string
+	// ctrl_url	- hostname
+	// ctrl_port	- port number
+	// admin_email	- emaik
+	// drop_policy	- exact|rule
+	// recv_lldp	- boolean
+	// flowmod_limit- number
+	// rate_limit	- number
+	// admin_status	- boolean
+	function updateSlice($name, $ctrl_url, $ctrl_port, $admin_email, $drop_policy, $recv_lldp, $flowmod_limit, $rate_limit, $admin_status){
+	
+		if($name == null || $admin_email == null){
+			return null;
+		}	
+
+		$params = array("slice-name"=>$name, "admin-contact"=>$admin_email);
+		if($ctrl_url!=null){
+			$temp = array("controller-host"=>$ctrl_url);
+			$params = array_merge((array)$params, (array)$temp);
+		}
+		if($ctrl_port!=null){
+			$temp = array("controller-port"=>$ctrl_port);
+			$params = array_merge((array)$params, (array)$temp);
+		}
+		if($drop_policy!=null){
+			$temp = array("drop-policy"=>$drop_policy);
+			$params = array_merge((array)$params, (array)$temp);
+		}
+		if($recv_lldp!=null){
+			$temp = array("recv-lldp"=>$recv_lldp);
+			$params = array_merge((array)$params, (array)$temp);
+		}
+		if($flowmod_limit!=null){
+			$temp = array("flowmod-limit"=>$flowmod_limit);
+			$params = array_merge((array)$params, (array)$temp);
+		}
+		if($rate_limit!=null){
+			$temp = array("rate-limit"=>$rate_limit);
+			$params = array_merge((array)$params, (array)$temp);
+		}
+		if($admin_status!=null){
+			$temp = array("admin-status"=>$admin_status);
+			$params = array_merge((array)$params, (array)$temp);
+		}
+
+		$request = array("jsonrpc"=>"2.0",
+			"method"=>$this->UPDATE_SLICE,
+			"id"=>$this->request_count,
+			"params"=>$params);
+
+		//increase the request id count
+		$this->request_count++;
+		//encode the array in to a json string
+		$this->requestJson = json_encode($request);
+		//send the json request
+		$result = $this->send($this->requestJson);
+		//decode the result and return it
+		return json_decode($result,true); 
+	}
+
 
 	//this function will be used to post the json messages to the api
 	function send($json){
 		//initialise the curl connection on the flowvisor api address
-		$ch = curl_init('https://localhost:8080');
+		$ch = curl_init($this->serv);
 		//set the connection in "POST" mode
 		curl_setopt($ch, CURLOPT_CUSTOMREQUEST, "POST");
 		//set the json string as a post field
@@ -143,7 +207,7 @@ class fv_iface{
 			//echo "curl closing";
 			curl_close($ch);
 		}
-		print "result: $result <br>";
+//		print "result: $result <br>";
 		return $result;
 	}
 
