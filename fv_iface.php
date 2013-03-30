@@ -116,6 +116,10 @@ class fv_iface{
 	// removes named slice
 	// $name - slice name
 	function deleteSlice($name){
+		//check for null pointers
+		if($name==null){
+			return null;
+		}
 		//create the parameter array
 		$params = array("slice-name"=>$name);
 		//compile the request
@@ -210,7 +214,7 @@ class fv_iface{
 			"password"=>$pwd);
 		//creating the request 
 		$request = array("jsonrpc"=>"2.0",
-			"method"=>$this->UPDATE_SLICE,
+			"method"=>$this->UPDATE_SLICE_PWD,
 			"id"=>$this->request_count,
 			"params"=>$params);
 
@@ -221,9 +225,107 @@ class fv_iface{
 		//send the json request
 		$result = $this->send($this->requestJson);
 		//decode the result and return it
-		return json_decode($result,true); 	
+		return json_decode($result,true);
 	}
 
+	// retrievs the flowspace information
+	// all parameters are optional
+	// name 	- string
+	// show_disabled- boolean
+	// TODO: this should be tested further when we actually add some flowspaces
+	function getFlowspace($name, $show_disabled){
+		
+		$params = null;
+
+		if($name!=null){
+			$params = array("name"=>$name);
+		}
+		if($show_disabled!=null){
+			if($params == null){
+				$params = array("show-disabled"=>$show_disabled);
+			}else{
+				$temp = array("show-disabled"=>$show_disabled);
+				$params = array_merge((array)$params, (array)$temp);
+			}
+		}
+
+		//creating the request 
+		if($params==null){
+			$params = (object)'';
+			$request = array("jsonrpc"=>"2.0",
+				"method"=>$this->GET_FLOWSPACE_LIST,
+				"id"=>$this->request_count,
+				"params"=>$params);
+			
+		}else{
+			$request = array("jsonrpc"=>"2.0",
+				"method"=>$this->GET_FLOWSPACE_LIST,
+				"id"=>$this->request_count,
+				"params"=>$params);
+		}
+
+		//increase the request id count
+		$this->request_count++;
+		//encode the array in to a json string
+		$this->requestJson = json_encode($request);
+		//send the json request
+		$result = $this->send($this->requestJson);
+		//decode the result and return it
+		return json_decode($result,true);
+	}
+
+	// creates a new flowspace rule
+	// name			- string
+	// dpid			- the id of the openflow deivces connected to this fv
+	//			+ it is 8 bytes long, a wildcard can be used: ff:ff:ff:ff:ff:ff:ff
+	// priority		- the priority number which helps to disambiguate which action should be performed 
+	//			+ if many flowspace rules overlap
+	// match		- the match rule, probably string with coma-separated var defs 
+	//			+ TODO: need to check this, compare to fvctl man page and test it
+	// queues		- optionam array of queue ids, TODO: check where this comes from
+	// force_enqueue	- optional, single queue id
+	// slice_action 	- array of tuples - slice name and permission value 
+	//			+ (delegate = 1, read = 2, write = 4, they add up like a bit mask).
+	function addFlowspace($name, $dpid, $priority, $match, $queues, $force_enqueue, $slice_action){
+
+
+/*
+		//increase the request id count
+		$this->request_count++;
+		//encode the array in to a json string
+		$this->requestJson = json_encode($request);
+		//send the json request
+		$result = $this->send($this->requestJson);
+		//decode the result and return it
+		return json_decode($result,true);
+*/
+	}
+
+	// removes a flowspace, named as the given parameter
+	// name 		- flowspace name, string, obligatory
+	function removeFlowspace($name){
+
+		if($name==null){
+			return null;
+		}
+
+		//create the parameter array
+		$params = array("flowspace-name"=>$name);
+		//creating the request 
+		$request = array("jsonrpc"=>"2.0",
+			"method"=>$this->REMOVE_FLOWSPACE,
+			"id"=>$this->request_count,
+			"params"=>$params);
+
+		//increase the request id count
+		$this->request_count++;
+		//encode the array in to a json string
+		$this->requestJson = json_encode($request);
+		//send the json request
+		$result = $this->send($this->requestJson);
+		//decode the result and return it
+		return json_decode($result,true);
+	}
 
 	//this function will be used to post the json messages to the api
 	function send($json){
