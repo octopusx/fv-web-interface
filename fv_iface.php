@@ -38,6 +38,11 @@ class fv_iface{
 		
 	}	
 
+	//---------------------------------------------------------------------------------
+	//			Configuration API
+	//---------------------------------------------------------------------------------
+
+
 	//this function will create an associative array which will then be turned in to a json object.
 	//that object will then be passed to the "send" function, which will call pass it to our fv.
 	//example request:
@@ -286,10 +291,38 @@ class fv_iface{
 	// force_enqueue	- optional, single queue id
 	// slice_action 	- array of tuples - slice name and permission value 
 	//			+ (delegate = 1, read = 2, write = 4, they add up like a bit mask).
+	// TODO: needs to be tested!!
 	function addFlowspace($name, $dpid, $priority, $match, $queues, $force_enqueue, $slice_action){
 
+		//check for null pointers on required fields
+		if($name==null || $dpid==null || $priority==null || $match==null  || $slice_action==null){
+			return null;
+		}
+		
+		//saving the non-optional parameters
+		$params = array("name"=>$name,
+			"dpid"=>$dpid,
+			"priority"=>$priority,
+			"match"=>$match,
+			"slice-action"=>$slice_action);
+			
+		//checking for optional parameters
+		if($queues!=null){
+			$temp = array("queues"=>$queues);
+			$params = array_merge((array)$params, (array)$temp);
+		}
 
-/*
+		if($force_enqueue!=null){
+			$temp = array("force_enqueue"=>$force_enqueue);
+			$params = array_merge((array)$params, (array)$temp);
+		}
+
+		//creating the request
+		$request = array("jsonrpc"=>"2.0",
+			"method"=>$this->CREATE_FLOWSPACE,
+			"id"=>$this->request_count,
+			"params"=>$params);
+
 		//increase the request id count
 		$this->request_count++;
 		//encode the array in to a json string
@@ -298,13 +331,14 @@ class fv_iface{
 		$result = $this->send($this->requestJson);
 		//decode the result and return it
 		return json_decode($result,true);
-*/
 	}
 
 	// removes a flowspace, named as the given parameter
 	// name 		- flowspace name, string, obligatory
+	//TODO: needs to be tested!!
 	function removeFlowspace($name){
 
+		//null pointer check
 		if($name==null){
 			return null;
 		}
@@ -326,6 +360,271 @@ class fv_iface{
 		//decode the result and return it
 		return json_decode($result,true);
 	}
+
+
+	// everything like in the createFlowspace, except that only the name is a non-optional parameter
+	// need to check if there is a minimum of one optional parameter required...
+	// TODO: needs to be tested!!
+	function updateFlowspace($name, $dpid, $priority, $match, $queues, $force_enqueue, $slice_action){
+
+		//check for null pointers on required fields
+		if($name==null){
+			return null;
+		}
+		
+		//saving the non-optional parameters
+		$params = array("name"=>$name);
+			
+		//checking for optional parameters
+		if($dpid!=null){
+			$temp = array("dpid"=>$dpid);
+			$params = array_merge((array)$params, (array)$temp);
+		}
+		if($priority!=null){
+			$temp = array("priority"=>$priority);
+			$params = array_merge((array)$params, (array)$temp);
+		}
+		if($match!=null){
+			$temp = array("match"=>$match);
+			$params = array_merge((array)$params, (array)$temp);
+		}
+		if($queues!=null){
+			$temp = array("queues"=>$queues);
+			$params = array_merge((array)$params, (array)$temp);
+		}
+		if($force_enqueue!=null){
+			$temp = array("force_enqueue"=>$force_enqueue);
+			$params = array_merge((array)$params, (array)$temp);
+		}
+		if($slice_action!=null){
+			$temp = array("slice-action"=>$slice_action);
+			$params = array_merge((array)$params, (array)$temp);
+		}
+		//creating the request
+		$request = array("jsonrpc"=>"2.0",
+			"method"=>$this->UPDATE_FLOWSPACE,
+			"id"=>$this->request_count,
+			"params"=>$params);
+
+		//increase the request id count
+		$this->request_count++;
+		//encode the array in to a json string
+		$this->requestJson = json_encode($request);
+		//send the json request
+		$result = $this->send($this->requestJson);
+		//decode the result and return it
+		return json_decode($result,true);
+
+	}
+	// returns the flowvisor and db version information
+	function getVersion(){
+		//creating the request
+		$request = array("jsonrpc"=>"2.0",
+			"method"=>$this->GET_VERSION,
+			"id"=>$this->request_count);
+
+		//increase the request id count
+		$this->request_count++;
+		//encode the array in to a json string
+		$this->requestJson = json_encode($request);
+		//send the json request
+		$result = $this->send($this->requestJson);
+		//decode the result and return it
+		return json_decode($result,true);	
+	}
+
+	/* used to configure the flowvisor, change any settings
+	*  $flood_perm			- assoc array, includes "slice-name" and "dpid", optional
+	*  $flowmod_limit		- assoc array, includes "slice-name", "dpid" and "limit" number, optional
+	*  $track_flows			- boolean, optional
+	*  $stats_desc			- boolean, optional
+	*  $enable_topo_ctrl		- boolean, optional 
+	*  flow_stats_cache		- number of seconds, optional
+	*  as  all the paramteters are optional, at least one must be not null
+	*  TODO: needs testing!!
+	*/ 
+	function setConfig($flood_perm, $flowmod_limit, $track_flows, $stats_desc, $enable_topo_ctrl, $flow_stats_cache){
+
+		if($flood_perm == null && $flowmod_limit == null && $track_flows == null && $stats_desc == null && $enable_topo_ctrl == null && $flow_stats_cache == null){
+			return null;
+		}
+
+		$params = null;
+			
+		if($flood_perm!=null){
+			$params = array("dpid"=>$dpid);
+		}
+		
+		if($flowmod_limit!=null){
+			if($params!=null){
+				$temp = array("flowmod-limit"=>$flowmod_limit);
+				$params = array_merge((array)$params, (array)$temp);
+			}else{
+				$params = array("flowmod-limit"=>$flowmod_limit);
+			}
+		}
+		if($track_flows!=null){
+			if($params!=null){
+				$temp = array("track-flows"=>$track_flows);
+				$params = array_merge((array)$params, (array)$temp);
+			}else{
+				$params = array("track-flows"=>$track_flows);
+			}
+		}
+		if($stats_desc!=null){
+			if($params!=null){
+				$temp = array("stats-desc"=>$stats_desc);
+				$params = array_merge((array)$params, (array)$temp);
+			}else{
+				$params = array("state-desc"=>$stats_desc);
+			}
+		}
+		if($enable_topo_ctrl!=null){
+			if($params!=null){
+				$temp = array("enable-topo-ctrl"=>$emable_topo_ctrl);
+				$params = array_merge((array)$params, (array)$temp);
+			}else{
+				$params = array("enable-topo-ctrl"=>$enable_topo_ctrl);
+			}
+		}
+		if($flow_stats_cache!=null){
+			if($params!=null){
+				$temp = array("flow-stats-cache"=>$flow_stats_cache);
+				$params = array_merge((array)$params, (array)$temp);
+			}else{
+				$params = array("flow-state-cache"=>$flow_state_cache);
+			}
+		}
+		//creating the request
+		$request = array("jsonrpc"=>"2.0",
+			"method"=>$this->SET_CONFIG,
+			"id"=>$this->request_count,
+			"params"=>$params);
+
+		//increase the request id count
+		$this->request_count++;
+		//encode the array in to a json string
+		$this->requestJson = json_encode($request);
+		//send the json request
+		$result = $this->send($this->requestJson);
+		//decode the result and return it
+		return json_decode($result,true);
+
+	
+	}
+
+	// retrievs the config information, all parameters optional
+	// $slice_name 			- string, optional
+	// $dpid			= dpid value, optional
+	// TODO: needs tesing!!
+	function getConfig($slice_name, $dpid)
+
+		
+		$params = null;
+
+		if($slice_name!=null){
+			$params = array("slice-name"=>$slice_name);
+		}
+		if($dpid!=null){
+			if($params == null){
+				$params = array("dpid"=>$dpid);
+			}else{
+				$temp = array("dpid"=>$dpid);
+				$params = array_merge((array)$params, (array)$temp);
+			}
+		}
+
+		//creating the request 
+		if($params==null){
+			$params = (object)'';
+			$request = array("jsonrpc"=>"2.0",
+				"method"=>$this->GET_CONFIG,
+				"id"=>$this->request_count,
+				"params"=>$params);
+			
+		}else{
+			$request = array("jsonrpc"=>"2.0",
+				"method"=>$this->GET_CONFIG,
+				"id"=>$this->request_count,
+				"params"=>$params);
+		}
+
+		//increase the request id count
+		$this->request_count++;
+		//encode the array in to a json string
+		$this->requestJson = json_encode($request);
+		//send the json request
+		$result = $this->send($this->requestJson);
+		//decode the result and return it
+		return json_decode($result,true);
+	}
+
+	// returns the config as a text blob
+	// TODO: needs teesting!!
+	function saveConfig(){
+	
+		$request = array("jsonrpc"=>"2.0",
+		"method"=>$this->SAVE_CONFIG,
+		"id"=>$this->request_count);
+	
+		//increase the request id count
+		$this->request_count++;
+		//encode the array in to a json string
+		$this->requestJson = json_encode($request);
+		//send the json request
+		$result = $this->send($this->requestJson);
+		//decode the result and return it
+		return json_decode($result,true);	
+	}
+
+	//---------------------------------------------------------------------------------
+	//			Monitoring API
+	//---------------------------------------------------------------------------------
+
+	function getSliceInfo(){
+
+	}
+
+	function getDatapaths(){
+
+	}
+
+	function getLinks(){
+
+	}
+
+	function getDatapathInfo(){
+
+	}
+
+	function getSliceStats(){
+
+	}
+
+	function getDatapathStats(){
+
+	}
+
+	function getFvHealth(){
+
+	}
+
+	function getSliceHealth(){
+
+	}
+
+	function registerCallbackEvent(){
+
+	}
+
+	function unregisterEventCallback(){
+
+	}
+
+	//---------------------------------------------------------------------------------
+	//			Other Functions
+	//---------------------------------------------------------------------------------
+
 
 	//this function will be used to post the json messages to the api
 	function send($json){
