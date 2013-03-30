@@ -574,27 +574,88 @@ class fv_iface{
 		//send the json request
 		$result = $this->send($this->requestJson);
 		//decode the result and return it
-		return json_decode($result,true);	
+		return json_decode($result,true);
 	}
 
 	//---------------------------------------------------------------------------------
 	//			Monitoring API
 	//---------------------------------------------------------------------------------
 
-	function getSliceInfo(){
+	// $slice_name 				- name of the slice in question, compulsory
+	// TODO: not yet tested
+	function getSliceInfo($name){
 
+		$params = array("slice-name"=>$name);
+
+		$request = array("jsonrpc"=>"2.0",
+		"method"=>$this->GET_SLICE_INFO,
+		"id"=>$this->request_count,
+		"params"=>$params);
+	
+		//increase the request id count
+		$this->request_count++;
+		//encode the array in to a json string
+		$this->requestJson = json_encode($request);
+		//send the json request
+		$result = $this->send($this->requestJson);
+		//decode the result and return it
+		return json_decode($result,true);
 	}
 
+	// lists the dpids, so lets us discover devices connected to the fv
+	// no parameters required
+	// TODO: not yet tested
 	function getDatapaths(){
 
+		$request = array("jsonrpc"=>"2.0",
+		"method"=>$this->GET_DATAPATHS,
+		"id"=>$this->request_count);
+	
+		//increase the request id count
+		$this->request_count++;
+		//encode the array in to a json string
+		$this->requestJson = json_encode($request);
+		//send the json request
+		$result = $this->send($this->requestJson);
+		//decode the result and return it
+		return json_decode($result,true);
 	}
 
+	// maps the links between the devices (dpids)
+	// no params
+	// TODO: not tested yet
 	function getLinks(){
 
+		$request = array("jsonrpc"=>"2.0",
+		"method"=>$this->GET_LINKS,
+		"id"=>$this->request_count);
+	
+		//increase the request id count
+		$this->request_count++;
+		//encode the array in to a json string
+		$this->requestJson = json_encode($request);
+		//send the json request
+		$result = $this->send($this->requestJson);
+		//decode the result and return it
+		return json_decode($result,true);
 	}
 
+	// $pdid 			-compulsory field, id of a device
+	// TODO: not tested yet
 	function getDatapathInfo(){
 
+		$request = array("jsonrpc"=>"2.0",
+		"method"=>$this->GET_DATAPATH_INFO,
+		"id"=>$this->request_count);
+	
+		//increase the request id count
+		$this->request_count++;
+		//encode the array in to a json string
+		$this->requestJson = json_encode($request);
+		//send the json request
+		$result = $this->send($this->requestJson);
+		//decode the result and return it
+		return json_decode($result,true);
 	}
 
 	function getSliceStats(){
