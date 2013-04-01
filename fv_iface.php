@@ -658,28 +658,165 @@ class fv_iface{
 		return json_decode($result,true);
 	}
 
-	function getSliceStats(){
+	// gets the list of messages from all senders on the slice, sorted by tx, rx and droped.
+	// $name			- name of thes lice, compulsiory
+	// TODO: needs testing
+	function getSliceStats($name){
 
+		if($name==null){
+			return null;
+		}
+
+		$params = array("slice-name"=>$name);
+
+		$request = array("jsonrpc"=>"2.0",
+		"method"=>$this->GET_SLICE_STATS,
+		"id"=>$this->request_count,
+		"params"=>$params);
+	
+		//increase the request id count
+		$this->request_count++;
+		//encode the array in to a json string
+		$this->requestJson = json_encode($request);
+		//send the json request
+		$result = $this->send($this->requestJson);
+		//decode the result and return it
+		return json_decode($result,true);
+	}
+	// same as the slice stats, but for datapaths
+	// $dpid 			- device id, compulsory
+	// TODO: needs testing
+	function getDatapathStats($dpid){
+
+		if($dpid==null){
+			return null;
+		}
+
+		$params = array("dpid"=>$dpid);
+
+		$request = array("jsonrpc"=>"2.0",
+		"method"=>$this->GET_DATAPATH_STATS,
+		"id"=>$this->request_count,
+		"params"=>$params);
+	
+		//increase the request id count
+		$this->request_count++;
+		//encode the array in to a json string
+		$this->requestJson = json_encode($request);
+		//send the json request
+		$result = $this->send($this->requestJson);
+		//decode the result and return it
+		return json_decode($result,true);
 	}
 
-	function getDatapathStats(){
-
-	}
-
+	// returns average delay, instnt delay, active db sessions and idle db sessions
+	// TODO: needs testing
 	function getFvHealth(){
 
+		$request = array("jsonrpc"=>"2.0",
+		"method"=>$this->GET_FV_HEALTH,
+		"id"=>$this->request_count);
+	
+		//increase the request id count
+		$this->request_count++;
+		//encode the array in to a json string
+		$this->requestJson = json_encode($request);
+		//send the json request
+		$result = $this->send($this->requestJson);
+		//decode the result and return it
+		return json_decode($result,true);
 	}
 
-	function getSliceHealth(){
+	// returns connection status, connection drop count, fs entries (?) and connected dpids
+	// $name 			- name of the slice, compulsory
+	// TODO: needs testing
+	function getSliceHealth($name){
+
+		if($name==null){
+			return null;
+		}
+
+		$params = array("slice-name"=>$name);
+
+		$request = array("jsonrpc"=>"2.0",
+		"method"=>$this->GET_SLICE_HEALTH,
+		"id"=>$this->request_count,
+		"params"=>$params);
+	
+		//increase the request id count
+		$this->request_count++;
+		//encode the array in to a json string
+		$this->requestJson = json_encode($request);
+		//send the json request
+		$result = $this->send($this->requestJson);
+		//decode the result and return it
+		return json_decode($result,true);
 
 	}
 
-	function registerCallbackEvent(){
+	// $url 			- not sure, maybe the url to which the callback is done
+	// $method			- the method name called by the callback
+	// $event_type			- "DEVICE_CONECTED" | "SLICE_CONNECTED" | "SLICE_DISCONNECTED"
+	// $name			- the name for the callback
+	// all fields compulsory
+	// returns a boolean
+	// TODO: needs testing
+	function registerCallbackEvent($url, $method, $event_type, $name){
 
+		if($url==null||$method==null||$event_type==null||$name==null){
+			return null;
+		}
+
+		$params = array("url"=>$url,
+			"method"=>$method,
+			"event-type"=>$event_type,
+			"name"=>$name);
+
+		$request = array("jsonrpc"=>"2.0",
+		"method"=>$this->REGISTER_CALLBACK_EVENT,
+		"id"=>$this->request_count,
+		"params"=>$params);
+	
+		//increase the request id count
+		$this->request_count++;
+		//encode the array in to a json string
+		$this->requestJson = json_encode($request);
+		//send the json request
+		$result = $this->send($this->requestJson);
+		//decode the result and return it
+		return json_decode($result,true);
 	}
 
-	function unregisterEventCallback(){
+	// $method			- the method name called by the callback
+	// $event_type			- "DEVICE_CONECTED" | "SLICE_CONNECTED" | "SLICE_DISCONNECTED"
+	// $name			- the name for the callback
+	// all fields compulsory
+	// returns a boolean
+	// TODO: needs testing
 
+	function unregisterEventCallback($method, $event_type, $name){
+
+		if($method==null||$event_type==null||$name==null){
+			return null;
+		}
+
+		$params = array("method"=>$method,
+			"event-type"=>$event_type,
+			"name"=>$name);
+
+		$request = array("jsonrpc"=>"2.0",
+		"method"=>$this->UNREGISTER_CALLBACK_EVENT,
+		"id"=>$this->request_count,
+		"params"=>$params);
+	
+		//increase the request id count
+		$this->request_count++;
+		//encode the array in to a json string
+		$this->requestJson = json_encode($request);
+		//send the json request
+		$result = $this->send($this->requestJson);
+		//decode the result and return it
+		return json_decode($result,true);
 	}
 
 	//---------------------------------------------------------------------------------
