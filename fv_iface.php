@@ -34,10 +34,6 @@ class fv_iface{
 	private $pwd = "flowvisor";
 	private $serv = "https://192.168.0.9:8080";
 
-	function fv_iface(){
-		
-	}	
-
 	//---------------------------------------------------------------------------------
 	//			Configuration API
 	//---------------------------------------------------------------------------------
@@ -517,7 +513,7 @@ class fv_iface{
 	// $slice_name 			- string, optional
 	// $dpid			= dpid value, optional
 	// TODO: needs tesing!!
-	function getConfig($slice_name, $dpid)
+	function getConfig($slice_name, $dpid){
 
 		
 		$params = null;
@@ -823,6 +819,32 @@ class fv_iface{
 	//			Other Functions
 	//---------------------------------------------------------------------------------
 
+	//sets the login and password for the flowvisor
+	//both fields are compulsory
+	function set_login_credentials($login, $pw, $address){
+		if($login == null && $pw == null && $address == null){
+			return -1;
+		}
+
+		if($login!=null){
+			$this->user = $login;
+		}
+		if($pw!=null){
+			$this->pwd = $pw;
+		}
+		if($address!=null){
+			$this->serv = $address;
+		}
+		return 0;
+	}
+	
+	function getLogin(){
+		return $this->user;
+	}
+
+	function getAddress(){
+		return $this->serv;
+	}
 
 	//this function will be used to post the json messages to the api
 	function send($json){

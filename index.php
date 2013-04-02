@@ -1,14 +1,16 @@
-<html>
-	<head></head>
-	<body>
+<?php
+	ini_set('display_errors', 'On');
+?>
 
-		<h3>Flowvisor Login:</h3>
 
-		<form action="controller.php?source=login" method="post">
-		User: <input type="text" name="fname">
-		Password: <input type="text" name="age">
-		<input type="submit">
-		</form>
 
-	</body>
-</html>
+
+<?php
+
+	include_once("controller.php");
+	$controller = new Controller();
+
+	$controller::action($_POST);
+
+?>
+
