@@ -7,16 +7,30 @@
 		private $fv;// = new fv_iface();
 
 		public function __construct(){
-			$this->fv = new fv_iface();
+			global $fv;
+			$fv = new fv_iface();
 		}
 
 
 		public function login($login, $password, $address){
-			$this->fv->set_login_credentials($login, $password, $address);
+			global $fv;
+			$fv->set_login_credentials($login, $password, $address);
 		}
 
+		public function getLogin(){
+			global $fv;
+			return $fv->getLogin();
+		}
 
+		public function getAddress(){
+			global $fv;
+			return $fv->getAddress();
+		}
 
+		public function getSliceList(){
+			global $fv;
+			return $fv->getSliceList();
+		}
 
 	}
 
