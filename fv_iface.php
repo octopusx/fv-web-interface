@@ -638,11 +638,19 @@ class fv_iface{
 
 	// $pdid 			-compulsory field, id of a device
 	// TODO: not tested yet
-	function getDatapathInfo(){
+	function getDatapathInfo($dpid){
+
+		if($dpid==null){
+			return null;
+		}
+
+		$params = array("dpid"=>$dpid);
+
 
 		$request = array("jsonrpc"=>"2.0",
 		"method"=>$this->GET_DATAPATH_INFO,
-		"id"=>$this->request_count);
+		"id"=>$this->request_count,
+		"params"=>$params);
 	
 		//increase the request id count
 		$this->request_count++;
