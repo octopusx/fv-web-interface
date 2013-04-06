@@ -2,21 +2,42 @@
 
 	class xml_iface{
 
-		public __construct(){
+		private $location;
 
+		public __construct($loc){
+			global $location;
+			$location = $loc;
 		}
 
 
-		public function listFiles($dir){
+		// displays the list of files in our working directory
+		// returns an array of file names
+		public function listFiles(){
+			$result = null;
+			if($handle = opendir($location)){
+				while(false !== ($entry = readdir($handle))){
+					if($result == null){
+						$result = array($entry);
+					}else{
+						array_push($result, $entry);
+					}	
+				}
+			}
 
-
-		return null;
+			return $result;
 		}
 
 
 
+		public function getLocation(){
+			global $location;
+			return $location;
+		}
 
-
+		public function setLocation($loc){
+			global $location;
+			$location = $loc;
+		}
 
 	}
 

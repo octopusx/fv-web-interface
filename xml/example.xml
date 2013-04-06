@@ -20,8 +20,14 @@
 		</flowspace>
 	</slice>	
 	<config>
-		<flood_perm>slice1</flood_perm><!-- because we already know the name, we can just say yes or no to it-->
-		<flowmod_limit name="slice1">-1</flowmod_limit>
+		<flood_perm>slice1</flood_perm>
+		<flowmod_limit>
+			<rule>
+				<slice>slice1</slice>
+				<dpid>ff:ff:ff:ff:ff:ff:ff</dpid>
+				<limit>-1</limit>
+			</rule>
+		</flowmod_limit>
 		<track_flows>true</track_flows>
 		<stats_desc>true</stats_desc>
 		<enable_topo_ctrl>false</enable_topo_ctrl>
