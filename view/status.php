@@ -1,6 +1,11 @@
 <html>
 	<head></head>
 	<body>
+<?php
+//	include("fv_iface.php");
+//	$fv_test = new fv_iface;
+//	var_dump($fv_test->getSliceHealth("fvadmin"));
+?>
 		<h3>Flowvisor Configuration Tool</h3>
 		<h4>FlowVisor Status</h4>
 		<h5>Config Info</h5>
@@ -11,18 +16,26 @@
 
 		<p>FlowSpaces</br>
 		<?php
-			for($i = 0; $i<count($slice_ar);$i++){
-				echo $slice_ar[$i]."</br>";
-				echo $flowspaces[$i]."</br>";
+			if(is_array($flowspaces)){
+				for($i = 0; $i<count($slice_ar);$i++){
+					echo $slice_ar[$i]."</br>";
+					echo $flowspaces[$i]."</br>";
+				}
+			}else{
+				echo $flowspaces;
 			}
 		 ?>
 		</p>
 
 		<p>Configuration Info Per Slice</br>
 		<?php
-			for($i = 0; $i<count($slice_ar);$i++){
-				echo $slice_ar[$i]."</br>";
-				echo $config[$i]."</br>";
+			if(is_array($config)){
+				for($i = 0; $i<count($slice_ar);$i++){
+					echo $slice_ar[$i]."</br>";
+					echo $config[$i]."</br>";
+				}
+			}else{
+				echo $config;
 			}
 		?>
 		</p>
@@ -35,9 +48,13 @@
 
 		<p>Slice Details</br>
 		<?php
-			for($i = 0; $i<count($slice_ar);$i++){
-				echo $slice_ar[$i]."</br>";
-				echo $sinfo[$i]."</br>";
+			if(is_array($sinfo)){
+				for($i = 0; $i<count($slice_ar);$i++){
+					echo $slice_ar[$i]."</br>";
+					echo $sinfo[$i]."</br>";
+				}
+			}else{
+				echo $sinfo;
 			}
 		?>
 		</p>
@@ -52,27 +69,39 @@
 
 		<p>Datapath Info</br>
 		<?php
-			for($i = 0; $i<count($datapath_ar);$i++){
-				echo $datapath_ar[$i]."</br>";
-				echo $dinfo[$i]."</br>";
+			if(is_array($dinfo)){
+				for($i = 0; $i<count($datapath_ar);$i++){
+					echo $datapath_ar[$i]."</br>";
+					echo $dinfo[$i]."</br>";
+				}
+			}else{
+				echo $dinfo;
 			}
 		?>
 		</p>
 
 		<p>Slice Stats</br>
 		<?php
-			for($i = 0; $i<count($slice_ar);$i++){
-				echo $slice_ar[$i]."</br>";
-				echo $sstats[$i]."</br>";
+			if(is_array($sstats)){
+				for($i = 0; $i<count($slice_ar);$i++){
+					echo $slice_ar[$i]."</br>";
+					echo $sstats[$i]."</br>";
+				}
+			}else{
+				echo $sstats;
 			}
 		?>
 		</p>
 
 		<p>Datapath Stats</br>
 		<?php
-			for($i = 0; $i<count($datapath_ar);$i++){
-				echo $datapath_ar[$i]."</br>";
-				echo $dstats[$i]."</br>";
+			if(is_array($dstats)){
+				for($i = 0; $i<count($datapath_ar);$i++){
+					echo $datapath_ar[$i]."</br>";
+					echo $dstats[$i]."</br>";
+				}
+			}else{
+				echo $dstats;
 			}
 		?>
 		</p>
@@ -83,9 +112,13 @@
 
 		<p>Slice Health</br>
 		<?php
-			for($i = 0; $i<count($slice_ar);$i++){
-				echo $slice_ar[$i]."</br>";
-				echo $shealth[$i]."</br>";
+			if(is_array($shealth)){
+				for($i = 0; $i<count($slice_ar);$i++){
+					echo $slice_ar[$i]."</br>";
+					echo $shealth[$i]."</br>";
+				}
+			}else{
+				echo $shealth;
 			}
 		?>
 		</p>

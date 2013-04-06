@@ -11,8 +11,12 @@
 				<td><input type="button" id="status" value="Status" onclick = "location.href = 'index.php?source=status'"/></td>
 			</tr>
 			<tr>
-				<td>Configure FlowVisor</td>
+				<td>Manually Configure FlowVisor</td>
 				<td><input type="button" id="config" value="Configure" onclick = "location.href = 'index.php?source=config'"/></td>
+			</tr>
+			<tr>
+				<td>Manage FlowVisor Configurations</td>
+				<td><input type="button" id="config" value="Configure" onclick = "location.href = 'index.php?source=xml'"/></td>
 			</tr>
 		</table>
 	

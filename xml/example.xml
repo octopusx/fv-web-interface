@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<profile>
+	<slice name="slice1">
+		<controller_url>localhost:6633</controller_url>
+		<admin_email>octopusx@o2.pl</admin_email>
+		<password>password</password>
+		<drop_policy>exact</drop_policy>
+		<receive_lldp>true</receive_lldp>
+		<flowmod_limit>-1</iflowmod_limit>
+		<rate_limit>10000</rate_limit>
+		<admin_status>true</admin_status>
+		
+		<flowspace name="flowspace1">
+			<dpid>ff:ff:ff:ff:ff:ff:ff</dpid>
+			<priority>5</priority>
+			<match>tp_dst=80,tp_src=80</match>
+			<queues></queues>
+			<force_enqueue></force_enqueue>
+			<permission>7</permission>
+		</flowspace>
+	</slice>	
+	<config>
+		<flood_perm>slice1</flood_perm><!-- because we already know the name, we can just say yes or no to it-->
+		<flowmod_limit name="slice1">-1</flowmod_limit>
+		<track_flows>true</track_flows>
+		<stats_desc>true</stats_desc>
+		<enable_topo_ctrl>false</enable_topo_ctrl>
+		<flow_stats_cache>30</flow_stats_cache>
+	</config>
+</profile>

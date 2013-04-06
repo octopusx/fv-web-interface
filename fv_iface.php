@@ -512,7 +512,6 @@ class fv_iface{
 	// retrievs the config information, all parameters optional
 	// $slice_name 			- string, optional
 	// $dpid			= dpid value, optional
-	// TODO: needs tesing!!
 	function getConfig($slice_name, $dpid){
 
 		
@@ -619,7 +618,6 @@ class fv_iface{
 
 	// maps the links between the devices (dpids)
 	// no params
-	// TODO: not tested yet
 	function getLinks(){
 
 		$request = array("jsonrpc"=>"2.0",
@@ -664,7 +662,6 @@ class fv_iface{
 
 	// gets the list of messages from all senders on the slice, sorted by tx, rx and droped.
 	// $name			- name of thes lice, compulsiory
-	// TODO: needs testing
 	function getSliceStats($name){
 
 		if($name==null){
@@ -733,7 +730,8 @@ class fv_iface{
 
 	// returns connection status, connection drop count, fs entries (?) and connected dpids
 	// $name 			- name of the slice, compulsory
-	// TODO: needs testing
+	// Need tp be careful with this, seems to return null when the named slice isn't use 
+	// TODO: test once some active slices are available
 	function getSliceHealth($name){
 
 		if($name==null){
@@ -746,7 +744,6 @@ class fv_iface{
 		"method"=>$this->GET_SLICE_HEALTH,
 		"id"=>$this->request_count,
 		"params"=>$params);
-	
 		//increase the request id count
 		$this->request_count++;
 		//encode the array in to a json string
