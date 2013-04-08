@@ -5,11 +5,18 @@
 	class Model{
 
 		private $fv;// = new fv_iface();
+		private $xml;
 
 		public function __construct(){
-			global $fv;
+			global $fv, $xml;
 			$fv = new fv_iface();
+			$xml = new xml_iface();
 		}
+
+
+        //---------------------------------------------------------------------------------
+        //                      Monitoring API Related
+        //---------------------------------------------------------------------------------
 
 
 		public function login($login, $password, $address){

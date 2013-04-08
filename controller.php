@@ -27,6 +27,9 @@
 				$user = $model->getLogin();
 				$address = $model->getAddress();
 				include 'view/menu.php';
+			}else if($_GET['source']=="xml"){
+				self::configurationList();
+//				include 'view/config_management.php';
 			}
 
 		}
@@ -235,6 +238,14 @@
 
 			include 'view/status.php';
 
+		}
+
+		public function configurationList(){
+			$file_list = 
+
+
+
+			include 'view/config_management.php';
 		}
 
 		// takes the assoc arrays returned by the fv_iface and the model
