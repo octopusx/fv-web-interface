@@ -4,7 +4,7 @@
 
 		private $location;
 
-		public __construct($loc){
+		public function __construct($loc){
 			global $location;
 			$location = $loc;
 		}

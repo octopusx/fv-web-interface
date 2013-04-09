@@ -1,6 +1,7 @@
 <?php
 
 	include_once("fv_iface.php");
+	include_once("xml_iface.php");
 
 	class Model{
 
@@ -10,7 +11,7 @@
 		public function __construct(){
 			global $fv, $xml;
 			$fv = new fv_iface();
-			$xml = new xml_iface();
+			$xml = new xml_iface("./xml/");
 		}
 
 

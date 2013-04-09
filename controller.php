@@ -1,6 +1,6 @@
 <?php
 
-	include("model.php");
+	include_once("model.php");
 	
 	class Controller{
 
@@ -8,7 +8,7 @@
 
 		public function __construct(){
 			global $model;
-			$model = new Model;
+			$model = new Model();
 //			var_dump($this->model);
 		}
 
@@ -40,7 +40,9 @@
 			$log = $input['uname'];
 			$pw = $input['pwd'];
 			$adr = $input['address'];
-//			var_dump($this->$model);
+//			var_dump($log);
+//			var_dump($pw);
+//			var_dump($adr);
 			$model->login($log, $pw, $adr);
 
 			$user = $model->getLogin();

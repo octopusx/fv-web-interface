@@ -29,31 +29,46 @@ class fv_iface{
 	public $REGISTER_EVENT_CALLBACK = "register-event-callback";
 	public $UNREGISTER_EVENT_CALLBACK = "unregister-event-callback";
 
-	private $request_count = 0;
-	private $user = "fvadmin";
-	private $pwd = "flowvisor";
-	private $serv = "https://192.168.0.9:8080";
+	private $request_count;// = 0;
+	private $user;// = "fvadmin";
+	private $pwd;// = "flowvisor";
+	private $serv;// = "https://192.168.0.9:8080";
+
+
+	// basic constructor
+	public function __construct(){
+		global $request_count, $user, $pwd, $serv;
+		$request_count = 0;
+		$user = "fvadmin";
+		$pwd = "flowvisor";
+		$serv = "https://192.168.0.2:8080";
+		self::initialize();
+	}
+
+	private function initialize(){
+
+	}
 
 	//---------------------------------------------------------------------------------
 	//			Configuration API
 	//---------------------------------------------------------------------------------
 
-
 	//this function will create an associative array which will then be turned in to a json object.
 	//that object will then be passed to the "send" function, which will call pass it to our fv.
 	//example request:
 	//{"jsonrpc" : "2.0",  "method" : "<method>",  "params" :  <args> ,  "id" : <id>}
-	function getSliceList(){
+	public function getSliceList(){
+		global $request_count;
 		//compile the request in form of an array
 		$request = array("jsonrpc"=>"2.0",
 			"method"=>$this->GET_SLICE_LIST,
-			"id"=>$this->request_count);
+			"id"=>$request_count);
 		//increase the request id count
-		$this->request_count++;
+		$request_count++;
 		//encode the array in to a json string
-		$this->requestJson = json_encode($request);
+		$requestJson = json_encode($request);
 		//send the json request
-		$result = $this->send($this->requestJson);
+		$result = $this->send($requestJson);
 		//decode the result and return it
 		return json_decode($result,true);
 	}
@@ -69,7 +84,8 @@ class fv_iface{
 	// $flowmod_limit - a number, defaults to -1
 	// $rate_limit - number, defaults to -1
 	// $admin_status - boolean, defaults to true
-	function createSlice($name, $ctrl_url, $admin_email, $pwd, $drop_policy, $recv_lldp, $flowmod_limit, $rate_limit, $admin_status){
+	public function createSlice($name, $ctrl_url, $admin_email, $pwd, $drop_policy, $recv_lldp, $flowmod_limit, $rate_limit, $admin_status){
+		global $request_count;
 		//test if any of the non-optional variables are null	
 		if($name==null || $ctrl_url==null || $admin_email==null || $pwd==null){
 			return null;
@@ -102,10 +118,10 @@ class fv_iface{
 		//compile the request
 		$request = array("jsonrpc"=>"2.0",
 			"method"=>$this->CREATE_SLICE,
-			"id"=>$this->request_count,
+			"id"=>$request_count,
 			"params"=>$params);
 		//increase the request id count
-		$this->request_count++;
+		$request_count++;
 		//encode the array in to a json string
 		$this->requestJson = json_encode($request);
 		//send the json request
@@ -116,7 +132,8 @@ class fv_iface{
 
 	// removes named slice
 	// $name - slice name
-	function deleteSlice($name){
+	public function deleteSlice($name){
+		global $request_count;
 		//check for null pointers
 		if($name==null){
 			return null;
@@ -126,10 +143,10 @@ class fv_iface{
 		//compile the request
 		$request = array("jsonrpc"=>"2.0",
 			"method"=>$this->REMOVE_SLICE,
-			"id"=>$this->request_count,
+			"id"=>$request_count,
 			"params"=>$params);
 		//increase the request id count
-		$this->request_count++;
+		$request_count++;
 		//encode the array in to a json string
 		$this->requestJson = json_encode($request);
 		//send the json request
@@ -151,8 +168,9 @@ class fv_iface{
 	// flowmod_limit- number
 	// rate_limit	- number
 	// admin_status	- boolean
-	function updateSlice($name, $ctrl_url, $ctrl_port, $admin_email, $drop_policy, $recv_lldp, $flowmod_limit, $rate_limit, $admin_status){
+	public function updateSlice($name, $ctrl_url, $ctrl_port, $admin_email, $drop_policy, $recv_lldp, $flowmod_limit, $rate_limit, $admin_status){
 	
+		global $request_count;
 		if($name == null || $admin_email == null){
 			return null;
 		}	
@@ -189,11 +207,11 @@ class fv_iface{
 
 		$request = array("jsonrpc"=>"2.0",
 			"method"=>$this->UPDATE_SLICE,
-			"id"=>$this->request_count,
+			"id"=>$request_count,
 			"params"=>$params);
 
 		//increase the request id count
-		$this->request_count++;
+		$request_count++;
 		//encode the array in to a json string
 		$this->requestJson = json_encode($request);
 		//send the json request
@@ -203,8 +221,8 @@ class fv_iface{
 	}
 
 	// updates the password of a given slice
-	function updateSlicePassword($name, $pwd){
-
+	public function updateSlicePassword($name, $pwd){
+		global $request_count;
 		//check for any null pointers
 		if($name==null || $pwd==null){
 			return null;
@@ -216,11 +234,11 @@ class fv_iface{
 		//creating the request 
 		$request = array("jsonrpc"=>"2.0",
 			"method"=>$this->UPDATE_SLICE_PWD,
-			"id"=>$this->request_count,
+			"id"=>$request_count,
 			"params"=>$params);
 
 		//increase the request id count
-		$this->request_count++;
+		$request_count++;
 		//encode the array in to a json string
 		$this->requestJson = json_encode($request);
 		//send the json request
@@ -234,8 +252,8 @@ class fv_iface{
 	// name 	- string
 	// show_disabled- boolean
 	// TODO: this should be tested further when we actually add some flowspaces
-	function getFlowspace($name, $show_disabled){
-		
+	public function getFlowspace($name, $show_disabled){
+		global $request_count;
 		$params = null;
 
 		if($name!=null){
@@ -255,18 +273,18 @@ class fv_iface{
 			$params = (object)'';
 			$request = array("jsonrpc"=>"2.0",
 				"method"=>$this->GET_FLOWSPACE_LIST,
-				"id"=>$this->request_count,
+				"id"=>$request_count,
 				"params"=>$params);
 			
 		}else{
 			$request = array("jsonrpc"=>"2.0",
 				"method"=>$this->GET_FLOWSPACE_LIST,
-				"id"=>$this->request_count,
+				"id"=>$request_count,
 				"params"=>$params);
 		}
 
 		//increase the request id count
-		$this->request_count++;
+		$request_count++;
 		//encode the array in to a json string
 		$this->requestJson = json_encode($request);
 		//send the json request
@@ -288,8 +306,8 @@ class fv_iface{
 	// slice_action 	- array of tuples - slice name and permission value 
 	//			+ (delegate = 1, read = 2, write = 4, they add up like a bit mask).
 	// TODO: needs to be tested!!
-	function addFlowspace($name, $dpid, $priority, $match, $queues, $force_enqueue, $slice_action){
-
+	public function addFlowspace($name, $dpid, $priority, $match, $queues, $force_enqueue, $slice_action){
+		global $request_count;
 		//check for null pointers on required fields
 		if($name==null || $dpid==null || $priority==null || $match==null  || $slice_action==null){
 			return null;
@@ -316,11 +334,11 @@ class fv_iface{
 		//creating the request
 		$request = array("jsonrpc"=>"2.0",
 			"method"=>$this->CREATE_FLOWSPACE,
-			"id"=>$this->request_count,
+			"id"=>$request_count,
 			"params"=>$params);
 
 		//increase the request id count
-		$this->request_count++;
+		$request_count++;
 		//encode the array in to a json string
 		$this->requestJson = json_encode($request);
 		//send the json request
@@ -332,8 +350,8 @@ class fv_iface{
 	// removes a flowspace, named as the given parameter
 	// name 		- flowspace name, string, obligatory
 	//TODO: needs to be tested!!
-	function removeFlowspace($name){
-
+	public function removeFlowspace($name){
+		global $request_count;
 		//null pointer check
 		if($name==null){
 			return null;
@@ -344,11 +362,11 @@ class fv_iface{
 		//creating the request 
 		$request = array("jsonrpc"=>"2.0",
 			"method"=>$this->REMOVE_FLOWSPACE,
-			"id"=>$this->request_count,
+			"id"=>$request_count,
 			"params"=>$params);
 
 		//increase the request id count
-		$this->request_count++;
+		$request_count++;
 		//encode the array in to a json string
 		$this->requestJson = json_encode($request);
 		//send the json request
@@ -361,8 +379,8 @@ class fv_iface{
 	// everything like in the createFlowspace, except that only the name is a non-optional parameter
 	// need to check if there is a minimum of one optional parameter required...
 	// TODO: needs to be tested!!
-	function updateFlowspace($name, $dpid, $priority, $match, $queues, $force_enqueue, $slice_action){
-
+	public function updateFlowspace($name, $dpid, $priority, $match, $queues, $force_enqueue, $slice_action){
+		global $request_count;
 		//check for null pointers on required fields
 		if($name==null){
 			return null;
@@ -399,11 +417,11 @@ class fv_iface{
 		//creating the request
 		$request = array("jsonrpc"=>"2.0",
 			"method"=>$this->UPDATE_FLOWSPACE,
-			"id"=>$this->request_count,
+			"id"=>$request_count,
 			"params"=>$params);
 
 		//increase the request id count
-		$this->request_count++;
+		$request_count++;
 		//encode the array in to a json string
 		$this->requestJson = json_encode($request);
 		//send the json request
@@ -413,14 +431,15 @@ class fv_iface{
 
 	}
 	// returns the flowvisor and db version information
-	function getVersion(){
+	public function getVersion(){
+		global $request_count;
 		//creating the request
 		$request = array("jsonrpc"=>"2.0",
 			"method"=>$this->GET_VERSION,
-			"id"=>$this->request_count);
+			"id"=>$request_count);
 
 		//increase the request id count
-		$this->request_count++;
+		$request_count++;
 		//encode the array in to a json string
 		$this->requestJson = json_encode($request);
 		//send the json request
@@ -439,8 +458,8 @@ class fv_iface{
 	*  as  all the paramteters are optional, at least one must be not null
 	*  TODO: needs testing!!
 	*/ 
-	function setConfig($flood_perm, $flowmod_limit, $track_flows, $stats_desc, $enable_topo_ctrl, $flow_stats_cache){
-
+	public function setConfig($flood_perm, $flowmod_limit, $track_flows, $stats_desc, $enable_topo_ctrl, $flow_stats_cache){
+		global $request_count;
 		if($flood_perm == null && $flowmod_limit == null && $track_flows == null && $stats_desc == null && $enable_topo_ctrl == null && $flow_stats_cache == null){
 			return null;
 		}
@@ -494,11 +513,11 @@ class fv_iface{
 		//creating the request
 		$request = array("jsonrpc"=>"2.0",
 			"method"=>$this->SET_CONFIG,
-			"id"=>$this->request_count,
+			"id"=>$request_count,
 			"params"=>$params);
 
 		//increase the request id count
-		$this->request_count++;
+		$request_count++;
 		//encode the array in to a json string
 		$this->requestJson = json_encode($request);
 		//send the json request
@@ -512,9 +531,9 @@ class fv_iface{
 	// retrievs the config information, all parameters optional
 	// $slice_name 			- string, optional
 	// $dpid			= dpid value, optional
-	function getConfig($slice_name, $dpid){
+	public function getConfig($slice_name, $dpid){
 
-		
+		global $request_count;	
 		$params = null;
 
 		if($slice_name!=null){
@@ -534,18 +553,18 @@ class fv_iface{
 			$params = (object)'';
 			$request = array("jsonrpc"=>"2.0",
 				"method"=>$this->GET_CONFIG,
-				"id"=>$this->request_count,
+				"id"=>$request_count,
 				"params"=>$params);
 			
 		}else{
 			$request = array("jsonrpc"=>"2.0",
 				"method"=>$this->GET_CONFIG,
-				"id"=>$this->request_count,
+				"id"=>$request_count,
 				"params"=>$params);
 		}
 
 		//increase the request id count
-		$this->request_count++;
+		$request_count++;
 		//encode the array in to a json string
 		$this->requestJson = json_encode($request);
 		//send the json request
@@ -556,14 +575,14 @@ class fv_iface{
 
 	// returns the config as a text blob
 	// TODO: needs teesting!!
-	function saveConfig(){
-	
+	public function saveConfig(){
+		global $request_count;
 		$request = array("jsonrpc"=>"2.0",
 		"method"=>$this->SAVE_CONFIG,
-		"id"=>$this->request_count);
+		"id"=>$request_count);
 	
 		//increase the request id count
-		$this->request_count++;
+		$request_count++;
 		//encode the array in to a json string
 		$this->requestJson = json_encode($request);
 		//send the json request
@@ -578,17 +597,17 @@ class fv_iface{
 
 	// $slice_name 				- name of the slice in question, compulsory
 	// TODO: not yet tested
-	function getSliceInfo($name){
-
+	public function getSliceInfo($name){
+		global $request_count;
 		$params = array("slice-name"=>$name);
 
 		$request = array("jsonrpc"=>"2.0",
 		"method"=>$this->GET_SLICE_INFO,
-		"id"=>$this->request_count,
+		"id"=>$request_count,
 		"params"=>$params);
 	
 		//increase the request id count
-		$this->request_count++;
+		$request_count++;
 		//encode the array in to a json string
 		$this->requestJson = json_encode($request);
 		//send the json request
@@ -600,14 +619,14 @@ class fv_iface{
 	// lists the dpids, so lets us discover devices connected to the fv
 	// no parameters required
 	// TODO: not yet tested
-	function getDatapaths(){
-
+	public function getDatapaths(){
+		global $request_count;
 		$request = array("jsonrpc"=>"2.0",
 		"method"=>$this->GET_DATAPATHS,
-		"id"=>$this->request_count);
+		"id"=>$request_count);
 	
 		//increase the request id count
-		$this->request_count++;
+		$request_count++;
 		//encode the array in to a json string
 		$this->requestJson = json_encode($request);
 		//send the json request
@@ -618,14 +637,14 @@ class fv_iface{
 
 	// maps the links between the devices (dpids)
 	// no params
-	function getLinks(){
-
+	public function getLinks(){
+		global $request_count;
 		$request = array("jsonrpc"=>"2.0",
 		"method"=>$this->GET_LINKS,
-		"id"=>$this->request_count);
+		"id"=>$request_count);
 	
 		//increase the request id count
-		$this->request_count++;
+		$request_count++;
 		//encode the array in to a json string
 		$this->requestJson = json_encode($request);
 		//send the json request
@@ -636,8 +655,8 @@ class fv_iface{
 
 	// $pdid 			-compulsory field, id of a device
 	// TODO: not tested yet
-	function getDatapathInfo($dpid){
-
+	public function getDatapathInfo($dpid){
+		global $request_count;
 		if($dpid==null){
 			return null;
 		}
@@ -647,11 +666,11 @@ class fv_iface{
 
 		$request = array("jsonrpc"=>"2.0",
 		"method"=>$this->GET_DATAPATH_INFO,
-		"id"=>$this->request_count,
+		"id"=>$request_count,
 		"params"=>$params);
 	
 		//increase the request id count
-		$this->request_count++;
+		$request_count++;
 		//encode the array in to a json string
 		$this->requestJson = json_encode($request);
 		//send the json request
@@ -662,8 +681,8 @@ class fv_iface{
 
 	// gets the list of messages from all senders on the slice, sorted by tx, rx and droped.
 	// $name			- name of thes lice, compulsiory
-	function getSliceStats($name){
-
+	public function getSliceStats($name){
+		global $request_count;
 		if($name==null){
 			return null;
 		}
@@ -672,11 +691,11 @@ class fv_iface{
 
 		$request = array("jsonrpc"=>"2.0",
 		"method"=>$this->GET_SLICE_STATS,
-		"id"=>$this->request_count,
+		"id"=>$request_count,
 		"params"=>$params);
 	
 		//increase the request id count
-		$this->request_count++;
+		$request_count++;
 		//encode the array in to a json string
 		$this->requestJson = json_encode($request);
 		//send the json request
@@ -687,8 +706,8 @@ class fv_iface{
 	// same as the slice stats, but for datapaths
 	// $dpid 			- device id, compulsory
 	// TODO: needs testing
-	function getDatapathStats($dpid){
-
+	public function getDatapathStats($dpid){
+		global $request_count;
 		if($dpid==null){
 			return null;
 		}
@@ -697,11 +716,11 @@ class fv_iface{
 
 		$request = array("jsonrpc"=>"2.0",
 		"method"=>$this->GET_DATAPATH_STATS,
-		"id"=>$this->request_count,
+		"id"=>$request_count,
 		"params"=>$params);
 	
 		//increase the request id count
-		$this->request_count++;
+		$request_count++;
 		//encode the array in to a json string
 		$this->requestJson = json_encode($request);
 		//send the json request
@@ -712,14 +731,14 @@ class fv_iface{
 
 	// returns average delay, instnt delay, active db sessions and idle db sessions
 	// TODO: needs testing
-	function getFvHealth(){
-
+	public function getFvHealth(){
+		global $request_count;
 		$request = array("jsonrpc"=>"2.0",
 		"method"=>$this->GET_FV_HEALTH,
-		"id"=>$this->request_count);
+		"id"=>$request_count);
 	
 		//increase the request id count
-		$this->request_count++;
+		$request_count++;
 		//encode the array in to a json string
 		$this->requestJson = json_encode($request);
 		//send the json request
@@ -732,8 +751,8 @@ class fv_iface{
 	// $name 			- name of the slice, compulsory
 	// Need tp be careful with this, seems to return null when the named slice isn't use 
 	// TODO: test once some active slices are available
-	function getSliceHealth($name){
-
+	public function getSliceHealth($name){
+		global $request_count;
 		if($name==null){
 			return null;
 		}
@@ -742,10 +761,10 @@ class fv_iface{
 
 		$request = array("jsonrpc"=>"2.0",
 		"method"=>$this->GET_SLICE_HEALTH,
-		"id"=>$this->request_count,
+		"id"=>$request_count,
 		"params"=>$params);
 		//increase the request id count
-		$this->request_count++;
+		$request_count++;
 		//encode the array in to a json string
 		$this->requestJson = json_encode($request);
 		//send the json request
@@ -762,8 +781,8 @@ class fv_iface{
 	// all fields compulsory
 	// returns a boolean
 	// TODO: needs testing
-	function registerCallbackEvent($url, $method, $event_type, $name){
-
+	public function registerCallbackEvent($url, $method, $event_type, $name){
+		global $request_count;
 		if($url==null||$method==null||$event_type==null||$name==null){
 			return null;
 		}
@@ -775,11 +794,11 @@ class fv_iface{
 
 		$request = array("jsonrpc"=>"2.0",
 		"method"=>$this->REGISTER_CALLBACK_EVENT,
-		"id"=>$this->request_count,
+		"id"=>$request_count,
 		"params"=>$params);
 	
 		//increase the request id count
-		$this->request_count++;
+		$request_count++;
 		//encode the array in to a json string
 		$this->requestJson = json_encode($request);
 		//send the json request
@@ -795,8 +814,8 @@ class fv_iface{
 	// returns a boolean
 	// TODO: needs testing
 
-	function unregisterEventCallback($method, $event_type, $name){
-
+	public function unregisterEventCallback($method, $event_type, $name){
+		global $request_count;
 		if($method==null||$event_type==null||$name==null){
 			return null;
 		}
@@ -807,11 +826,11 @@ class fv_iface{
 
 		$request = array("jsonrpc"=>"2.0",
 		"method"=>$this->UNREGISTER_CALLBACK_EVENT,
-		"id"=>$this->request_count,
+		"id"=>$request_count,
 		"params"=>$params);
 	
 		//increase the request id count
-		$this->request_count++;
+		$request_count++;
 		//encode the array in to a json string
 		$this->requestJson = json_encode($request);
 		//send the json request
@@ -826,35 +845,44 @@ class fv_iface{
 
 	//sets the login and password for the flowvisor
 	//both fields are compulsory
-	function set_login_credentials($login, $pw, $address){
-		if($login == null && $pw == null && $address == null){
-			return -1;
-		}
+	public function set_login_credentials($login, $pw, $address){
+		global $user, $pwd, $serv;
+//		if($login == null && $pw == null && $address == null){
+//			return -1;
+//		}
 
 		if($login!=null){
-			$this->user = $login;
+			$user = $login;
 		}
 		if($pw!=null){
-			$this->pwd = $pw;
+			$pwd = $pw;
 		}
 		if($address!=null){
-			$this->serv = $address;
+			$serv = $address;
 		}
+var_dump($user);
+var_dump($pwd);
+var_dump($serv);
 		return 0;
 	}
 	
-	function getLogin(){
-		return $this->user;
+	public function getLogin(){
+		global $user;
+var_dump($user);
+		return $user;
 	}
 
-	function getAddress(){
-		return $this->serv;
+	public function getAddress(){
+		global $serv;
+var_dump($serv);
+		return $serv;
 	}
 
 	//this function will be used to post the json messages to the api
-	function send($json){
+	public function send($json){
+		global $serv, $pwd, $user, $request_count;
 		//initialise the curl connection on the flowvisor api address
-		$ch = curl_init($this->serv);
+		$ch = curl_init($serv);
 		//set the connection in "POST" mode
 		curl_setopt($ch, CURLOPT_CUSTOMREQUEST, "POST");
 		//set the json string as a post field
@@ -863,7 +891,7 @@ class fv_iface{
 		curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, 0);
 		curl_setopt($ch, CURLOPT_SSL_VERIFYHOST,  2);
 		//set the user and password to access the fv
-		curl_setopt($ch, CURLOPT_USERPWD,$this->user .":" .$this->pwd );
+		curl_setopt($ch, CURLOPT_USERPWD,$user .":" .$pwd );
 		//set the curl to return the server output
 		curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
 		//initialise the header
@@ -880,6 +908,7 @@ class fv_iface{
 			//echo "curl closing";
 			curl_close($ch);
 		}
+var_dump($request_count);
 //		print "result: $result <br>";
 		return $result;
 	}
