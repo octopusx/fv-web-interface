@@ -42,11 +42,6 @@ class fv_iface{
 		$user = "fvadmin";
 		$pwd = "flowvisor";
 		$serv = "https://192.168.0.2:8080";
-		self::initialize();
-	}
-
-	private function initialize(){
-
 	}
 
 	//---------------------------------------------------------------------------------
@@ -881,6 +876,7 @@ var_dump($serv);
 	//this function will be used to post the json messages to the api
 	public function send($json){
 		global $serv, $pwd, $user, $request_count;
+		$time1 = time();
 		//initialise the curl connection on the flowvisor api address
 		$ch = curl_init($serv);
 		//set the connection in "POST" mode
@@ -909,7 +905,11 @@ var_dump($serv);
 			curl_close($ch);
 		}
 var_dump($request_count);
+//		DEBUG
 //		print "result: $result <br>";
+		$time2 = time();
+		$time1 = $time2-$time1;
+//		print "time:".$time1."</br>";
 		return $result;
 	}
 

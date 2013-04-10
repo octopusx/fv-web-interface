@@ -9,19 +9,24 @@
 		private $xml;
 
 		public function __construct(){
-			global $fv, $xml;
+			global $fv, $xml, $xmlPath;
 			$fv = new fv_iface();
 			$xml = new xml_iface("./xml/");
+
+			$fv->set_login_credentials($xml->getName(), $xml->getPassword(), $xml->getAddress());
 		}
 
 
         //---------------------------------------------------------------------------------
-        //                      Monitoring API Related
+        //                      Config API Related
         //---------------------------------------------------------------------------------
 
 
 		public function login($login, $password, $address){
-			global $fv;
+			global $fv, $xml;
+			$xml->setName($login);
+			$xml->setPassword($password);
+			$xml->setAddress($address);
 			$fv->set_login_credentials($login, $password, $address);
 		}
 
@@ -111,6 +116,28 @@
 
 		}
 
+
+        //---------------------------------------------------------------------------------
+        //                      XML related
+        //---------------------------------------------------------------------------------
+
+		public function getProfileList(){
+			global $xml;
+			$list = $xml->listFiles();
+			$final = null;
+
+			foreach($list as $item){
+				if(strstr($item,"settings",false)==false&&strcmp($item,".")!=0&&strcmp($item,"..")!=0){
+					if($final==null){
+						$final = array($item);
+					}else{
+						array_push($final, $item);
+					}
+				}
+			}
+			var_dump($final);
+			return $final;
+		}
 
         //---------------------------------------------------------------------------------
         //                      Other Methods

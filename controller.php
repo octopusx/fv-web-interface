@@ -243,10 +243,8 @@
 		}
 
 		public function configurationList(){
-			$file_list = 
-
-
-
+			global $model;
+			$file_list = $model->getProfileList();
 			include 'view/config_management.php';
 		}
 
