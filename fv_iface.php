@@ -157,7 +157,7 @@ class fv_iface{
 	// name		- string
 	// ctrl_url	- hostname
 	// ctrl_port	- port number
-	// admin_email	- emaik
+	// admin_email	- email
 	// drop_policy	- exact|rule
 	// recv_lldp	- boolean
 	// flowmod_limit- number

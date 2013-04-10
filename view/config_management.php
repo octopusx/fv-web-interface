@@ -1,5 +1,17 @@
 <html>
 	<head>
+		<script>
+			function getSelection(){
+				var ret = "'index.php?source=load&xml=";
+				var choice = document.getElementsByName('file');
+				for (var i = 0, length = choice.length; i < length; i++) {
+					if (choice[i].checked) {
+						ret = ret + radios[i].value +"'";
+			        		return(ret);
+					}
+				}
+			}
+		</script>
 	</head>
 	<body>
 
@@ -10,18 +22,24 @@
 
 		<form action="">
 		<?php
-			echo "dupa";
 			if(is_array($file_list)){
-				echo count($file_list);
-				echo $file_list[0];
 				for($i = 0; $i<count($file_list); $i++){
-					echo "test";
+					echo "<input type=\"radio\" name=\"file\" value=\"";
+					echo $i;
+					echo "\" ";
+					if($i==0){echo " checked ";}
+					echo ">";
+					echo $file_list[$i];
+					?><br><?php
 				}
 			}else{
 				echo "No Files Found";
 			}
 		?>
+		<input type="submit" id="load" value="Load" onclick = "location.href = <script>document.write(getSelection())</script>"/>
 		</form>
+
+		<p><input type="submit" id="back" value="Back" onclick = "location.href = 'index.php?source=menu'"/></p>
 
 	</body>
 </html>

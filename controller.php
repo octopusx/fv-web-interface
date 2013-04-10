@@ -26,6 +26,8 @@
 				include 'view/menu.php';
 			}else if($_GET['source']=="xml"){
 				self::configurationList();
+			}else if($_GET['source']=="load"){
+				self::loadConfig();
 			}
 
 		}
@@ -239,6 +241,20 @@
 			global $model;
 			$file_list = $model->getProfileList();
 			include 'view/config_management.php';
+		}
+
+		public function loadConfig(){
+			global $model;
+
+			$result = $model->loadConfig($_GET['xml']);
+			$delete_flowspaces = "Flowspaces Deleted: ".$result['df'];
+			$delete_slices = "Slices Deleted: ".$result['ds'];
+			$reset_settings = "Settings Reset: ".$result['rs'];
+			$install_slices = "Slices Installed: ".$result['is'];
+			$install_flowspaces = "Flowspaces Installed: ".$result['if'];
+			$install_settings = "Settings Installed: ".$result['set'];
+
+			include 'view/load_profile.php';
 		}
 
 		// takes the assoc arrays returned by the fv_iface and the model

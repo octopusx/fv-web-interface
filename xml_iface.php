@@ -29,8 +29,9 @@
 		}
 
 		// takes path to file, returns the file contents as a string
-		public function loadFile($path){
-			return simplexml_load_file($path);
+		public function loadFile($filename){
+			global $location;
+			return simplexml_load_file($location.$filename);
 		}
 
 		public function getName(){

@@ -16,6 +16,56 @@
 			$fv->set_login_credentials($xml->getName(), $xml->getPassword(), $xml->getAddress());
 		}
 
+		// takes 
+		public function loadConfig($filename){
+			global $fv, $xml;
+			//slice args
+			$slice_name;
+			$controller_url;
+			$admin_email;
+			$pwd;
+			$drop_policy;
+			$recv_lldp;
+			$flowmod_limit;
+			$rate_limit;
+			$admin_status;
+			//flowspace args
+			$slice_name_fs;
+			$dpid; 
+			$priority;
+			$match;
+			$queues;
+			$force_enqueue;
+			$slice_action;
+			//config args
+			$flood_perm;
+			$flowmod_limit; //assoc array-> slice_name, dpid, limit
+			$track_flows;
+			$stats_desc;
+			$enable_topo_ctrl;
+			$flow_stats_cache;
+			// reslult associative array
+			$result = array("df"=>"False",
+				"ds"=>"False",
+				"rs"=>"False",
+				"is"=>"False",
+				"if"=>"False",
+				"set"=>"False");
+			// first delete all the flowspaces
+			// then delete all the current slices
+			// then create new slices
+			// create new flowspaces
+			// change the config settings
+
+			$slice_list = self::getAttribute(self::getSliceList(),"slice-name");
+var_dump($slice_list);
+//			$flowspace_list = 
+
+			$profile = $xml->loadFile($filename);
+
+			
+			return $result;
+		}
 
         //---------------------------------------------------------------------------------
         //                      Config API Related
@@ -45,10 +95,32 @@
 			return $fv->getSliceList();
 		}
 
+		public function createSlice($name, $ctrl_url, $admin_email, 
+			$pwd, $drop_policy, $recv_lldp, 
+			$flowmod_limit, $rate_limit, $admin_status){
+
+			global $fv;
+			$fv->createSlice($name, $ctrl_url, $admin_email, 
+				$pwd, $drop_policy, $recv_lldp, 
+				$flowmod_limit, $rate_limit, $admin_status);
+		}
+
+		public function deleteSlice($name){
+			global $fv;
+			$fv->deleteSlices($name);
+		}
+
 		public function getFlowSpaces($name){
 			global $fv;
 			return $fv->getFlowspace($name,true);
 
+		}
+
+		public function createFlowSpace($name, $dpid, $priority, 
+			$match, $queues, $force_enqueue, $slice_action){
+			global $fv;
+			$fv->addFlowspace($name, $dpid, $priority, 
+				$match, $queues, $force_enqueue, $slice_action);
 		}
 
 		public function getVersion(){
@@ -135,8 +207,14 @@
 					}
 				}
 			}
-//var_dump($final);
-			return $final;
+			$final2 = array();
+			$j = count($final)-1;
+			for($i = 0; $i<count($final); $i++){
+				array_push($final2, $final[$j]);
+				$j--;
+			}
+
+			return $final2;
 		}
 
         //---------------------------------------------------------------------------------
