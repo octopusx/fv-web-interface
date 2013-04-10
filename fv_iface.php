@@ -855,21 +855,21 @@ class fv_iface{
 		if($address!=null){
 			$serv = $address;
 		}
-var_dump($user);
-var_dump($pwd);
-var_dump($serv);
+//var_dump($user);
+//var_dump($pwd);
+//var_dump($serv);
 		return 0;
 	}
 	
 	public function getLogin(){
 		global $user;
-var_dump($user);
+//var_dump($user);
 		return $user;
 	}
 
 	public function getAddress(){
 		global $serv;
-var_dump($serv);
+//var_dump($serv);
 		return $serv;
 	}
 

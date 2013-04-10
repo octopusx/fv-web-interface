@@ -10,15 +10,12 @@
 
 		<form action="">
 		<?php
+			echo "dupa";
 			if(is_array($file_list)){
-//				echo count($file_list);
-				for($i = 0; $i<count($file_list);$i++){
-					echo "<input type=\"radio\" name=\"file\" value=\"";
-					echo $i;
-					if($i==0){echo " checked";}
-					echo ">";
-					echo $file_list[$i];
-					?><br><?
+				echo count($file_list);
+				echo $file_list[0];
+				for($i = 0; $i<count($file_list); $i++){
+					echo "test";
 				}
 			}else{
 				echo "No Files Found";

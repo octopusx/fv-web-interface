@@ -9,17 +9,14 @@
 		public function __construct(){
 			global $model;
 			$model = new Model();
-//			var_dump($this->model);
 		}
 
 		//recognises the input and calls an appropriate method
 		public function action($input){
 			global $model;
-//			if($input==null){
 			if($_GET == null){
 				include 'view/login.php';
 			}else if($_GET['source']=="login"){
-//				var_dump($this->model);
 				self::login($input);
 			}else if($_GET['source']=="status"){
 				self::showStatus();
@@ -29,7 +26,6 @@
 				include 'view/menu.php';
 			}else if($_GET['source']=="xml"){
 				self::configurationList();
-//				include 'view/config_management.php';
 			}
 
 		}
@@ -40,9 +36,6 @@
 			$log = $input['uname'];
 			$pw = $input['pwd'];
 			$adr = $input['address'];
-//			var_dump($log);
-//			var_dump($pw);
-//			var_dump($adr);
 			$model->login($log, $pw, $adr);
 
 			$user = $model->getLogin();
