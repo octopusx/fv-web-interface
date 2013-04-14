@@ -1,15 +1,27 @@
 <html>
 	<head>
 		<script>
-			function getSelection(){
-				var ret = "'index.php?source=load&xml=";
-				var choice = document.getElementsByName('file');
-				for (var i = 0, length = choice.length; i < length; i++) {
-					if (choice[i].checked) {
-						ret = ret + radios[i].value +"'";
-			        		return(ret);
-					}
-				}
+			var choice = 0;
+			
+			function submit(){
+
+				var form = document.createElement("form");
+				form.setAttribute("method", "get");
+				form.setAttribute("action", "index.php");
+
+				var fieldA = document.createElement("input");
+				fieldA.setAttribute("type", "hidden");
+				fieldA.setAttribute("name", "source");
+				fieldA.setAttribute("value", "load");
+				form.appendChild(fieldA);
+				var fieldB = document.createElement("input");
+				fieldB.setAttribute("type", "hidden");
+				fieldB.setAttribute("name", "xml");
+				fieldB.setAttribute("value", choice);
+				form.appendChild(fieldB);
+				
+				document.body.appendChild(form);
+				form.submit();
 			}
 		</script>
 	</head>
@@ -20,7 +32,7 @@
 
 		<h5>Configuration list</h5>
 
-		<form action="">
+		<form>
 		<?php
 			if(is_array($file_list)){
 				for($i = 0; $i<count($file_list); $i++){
@@ -28,6 +40,7 @@
 					echo $i;
 					echo "\" ";
 					if($i==0){echo " checked ";}
+					echo "onclick=\"choice=this.value\"";
 					echo ">";
 					echo $file_list[$i];
 					?><br><?php
@@ -36,9 +49,9 @@
 				echo "No Files Found";
 			}
 		?>
-		<input type="submit" id="load" value="Load" onclick = "location.href = <script>document.write(getSelection())</script>"/>
 		</form>
 
+		<p><input type="submit" id="load" value="Load" onclick="submit()"/></p>
 		<p><input type="submit" id="back" value="Back" onclick = "location.href = 'index.php?source=menu'"/></p>
 
 	</body>
