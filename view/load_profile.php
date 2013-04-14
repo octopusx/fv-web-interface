@@ -9,7 +9,6 @@
 
 		<p><?php echo $delete_flowspaces; ?></p>
 		<p><?php echo $delete_slices; ?></p>
-		<p><?php echo $reset_settings; ?></p>
 		<p><?php echo $install_slices; ?></p>
 		<p><?php echo $install_flowspaces; ?></p>
 		<p><?php echo $install_settings; ?></p>

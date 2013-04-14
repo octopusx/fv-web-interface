@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="ISO-8859-1"?>
+<txml version="1.0" encoding="ISO-8859-1"?>
 <profile>
 	<slice name="slice1">
 		<controller_url>localhost:6633</controller_url>
@@ -6,7 +6,7 @@
 		<password>password</password>
 		<drop_policy>exact</drop_policy>
 		<receive_lldp>true</receive_lldp>
-		<flowmod_limit>-1</iflowmod_limit>
+		<flowmod_limit>-1</flowmod_limit>
 		<rate_limit>10000</rate_limit>
 		<admin_status>true</admin_status>
 		

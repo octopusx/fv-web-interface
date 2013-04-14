@@ -246,7 +246,8 @@
 		public function loadConfig(){
 			global $model;
 
-			$result = $model->loadConfig($_GET['xml']);
+			$filename = $model->getProfileList()[$_GET['xml']];
+			$result = $model->loadConfig($filename);
 			$delete_flowspaces = "Flowspaces Deleted: ".$result['df'];
 			$delete_slices = "Slices Deleted: ".$result['ds'];
 			$reset_settings = "Settings Reset: ".$result['rs'];
