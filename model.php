@@ -82,9 +82,9 @@
 
 			if($slice_list!=null&&count($slice_list)>0){
 				foreach($slice_list as $item){
-var_dump($item);
+//var_dump($item);
 					// TODO: HERE - IF NAME=FVADMMIN, DO NOT DELETE!!!
-					if(strcmp($item,"fvadmin")){
+					if(strcmp($item,"fvadmin")==0){
 						print("found fvadmin, not deleting\n");
 					}else{
 						print("deleting ".$item."\n");
@@ -102,38 +102,55 @@ var_dump($item);
 				if(strcmp($level1->getName(),"slice")==0){
 					$att = 'name';
 					$slice_name = (string)$level1->attributes()->$att;
-					foreach($level1->children() as $level2){
-						if(strcmp($level2->getName(),"controller_url")==0){
-							$controller_url = $level2->name;
-						}else if(strcmp($level2->getName(),"admin_email")==0){
-							$admin_email = $level2->name;
-						}else if(strcmp($level2->getName(),"password")==0){
-							$pwd = $level2->name;
-						}else if(strcmp($level2->getName(),"drop_policy")==0){
-							$drop_policy = $level2->name;
-						}else if(strcmp($level2->getName(),"receive_lldp")==0){
-							$recv_lldp = $level2->name;
-						}else if(strcmp($level2->getName(),"flowmod_limit")==0){
-							$flowmod_limit = $level2->name;
-						}else if(strcmp($level2->getName(),"rate_limit")==0){
-							$rate_limit = $level2->name;
-						}else if(strcmp($level2->getName(),"admin_starus")==0){
-							$admin_status = $level2->name;
-						}
+					print("Creating: ".$slice_name);
+					$controller_url = (string)$level1->controller_url;
+					$admin_email = (string)$level1->admin_email;
+					$pwd = (string)$level1->password;
+					$drop_policy = (string)$level1->drop_policy;
+					$recv_lldp = (string)$level1->receive_lldp;
+					if(strcmp($recv_lldp,"true")==0){
+						$recv_lldp = true;
+					}else if(strcmp($recv_lldp,"false")==0){
+						$recv_lldp = false;
+					}else{
+						$recv_lldp = null;
 					}
+					$flowmod_limit = (string)$level1->flowmod_limit;
+					if(is_int($flowmod_limit)){
+						$flowmod_limit = (int)$flowmod_limit;
+					}else{
+						$flowmod_limit = null;
+					}
+					$rate_limit = (string)$level1->rate_limit;
+					if(is_int($rate_limit)){
+						$rate_limit = (int)$rate_limit;
+					}else{
+						$rate_limit = null;
+					}
+					$admin_status = (string)$level1->admin_status;
+					if(strcmp($admin_status,"true")==0){
+						$admin_status = true;
+					}else if(strcmp($admin_status,"false")==0){
+						$admin_status = false;
+					}else{
+						$admin_status = null;
+					}
+
+
 					if($slice_name==null || $controller_url==null || $admin_email==null || $pwd==null){
 						$result['is']="False";
 						return $result;
 					}
 
-					$fv->createSlice($slice_name, $controller_url, $admin_email, 
+					$stuff = $fv->createSlice($slice_name, $controller_url, $admin_email, 
 							$pwd, $drop_policy, $recv_lldp, 
 							$flowmod_limit, $rate_limit, $admin_status);
-						
+//var_dump($stuff);						
 					
 				}else if(strcmp($level1->getName(),"config")==0){
 
 				}
+//var_dump($fv->getSliceList());
 			}
 			
 
@@ -178,7 +195,8 @@ var_dump($item);
 
 		public function getSliceList(){
 			global $fv, $xml;
-			$fv->set_login_credentials($xml->getName(), $xml->getPassword(), $xml->getAddress());
+//			$fv->set_login_credentials($xml->getName(), $xml->getPassword(), $xml->getAddress());
+//var_dump($fv->getSliceList());
 			return $fv->getSliceList();
 		}
 
@@ -187,7 +205,7 @@ var_dump($item);
 			$flowmod_limit, $rate_limit, $admin_status){
 
 			global $fv, $xml;
-			$fv->set_login_credentials($xml->getName(), $xml->getPassword(), $xml->getAddress());	
+//			$fv->set_login_credentials($xml->getName(), $xml->getPassword(), $xml->getAddress());	
 			$fv->createSlice($name, $ctrl_url, $admin_email, 
 				$pwd, $drop_policy, $recv_lldp, 
 				$flowmod_limit, $rate_limit, $admin_status);
@@ -195,7 +213,7 @@ var_dump($item);
 
 		public function deleteSlice($name){
 			global $fv, $xml;
-			$fv->set_login_credentials($xml->getName(), $xml->getPassword(), $xml->getAddress());			
+//			$fv->set_login_credentials($xml->getName(), $xml->getPassword(), $xml->getAddress());			
 			$fv->deleteSlices($name);
 		}
 
@@ -208,20 +226,20 @@ var_dump($item);
 		public function createFlowSpace($name, $dpid, $priority, 
 			$match, $queues, $force_enqueue, $slice_action){
 			global $fv, $xml;
-			$fv->set_login_credentials($xml->getName(), $xml->getPassword(), $xml->getAddress());			
+//			$fv->set_login_credentials($xml->getName(), $xml->getPassword(), $xml->getAddress());			
 			$fv->addFlowspace($name, $dpid, $priority, 
 				$match, $queues, $force_enqueue, $slice_action);
 		}
 
 		public function getVersion(){
 			global $fv, $xml;
-			$fv->set_login_credentials($xml->getName(), $xml->getPassword(), $xml->getAddress());			
+//			$fv->set_login_credentials($xml->getName(), $xml->getPassword(), $xml->getAddress());			
 			return $fv->getVersion();
 		}
 
 		public function getConfig($name){
 			global $fv, $xml;
-			$fv->set_login_credentials($xml->getName(), $xml->getPassword(), $xml->getAddress());			
+//			$fv->set_login_credentials($xml->getName(), $xml->getPassword(), $xml->getAddress());			
 			return $fv->getConfig($name, null);
 		}
 

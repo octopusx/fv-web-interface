@@ -50,7 +50,7 @@
 			global $model;
 
 			$slices_resp = $model->getSliceList();
-			$slices = self::resultToHTML($slices_resp,2);
+			$slices = self::resultToHTML($slices_resp,1);
 			//--------------------------------------------
 			$slice_ar = $model->getAttribute($slices_resp,"slice-name");
 			$flowspaces_resp = null;
@@ -82,7 +82,8 @@
 			//--------------------------------------------
 			$config_resp = null;
 			$config = null;
-
+print("slicear:");
+var_dump($slice_ar);
 			if($slice_ar==null || count($slice_ar)<=0){
 				$flowspaces = "<table border=1><tr><td>No Slices With Settings</td><tr></table>";
 			}else{
