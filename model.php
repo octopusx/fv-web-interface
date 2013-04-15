@@ -30,20 +30,20 @@
 			$rate_limit		=null;
 			$admin_status		=null;
 			//flowspace args
-			$slice_name_fs;
-			$dpid; 
-			$priority;
-			$match;
-			$queues;
-			$force_enqueue;
-			$slice_action;
+			$slice_name_fs		=null;
+			$dpid			=null; 
+			$priority		=null;
+			$match			=null;
+			$queues			=null;
+			$force_enqueue		=null;
+			$slice_action		=null;
 			//config args
-			$flood_perm;
-			$flowmod_limit; //assoc array-> slice_name, dpid, limit
-			$track_flows;
-			$stats_desc;
-			$enable_topo_ctrl;
-			$flow_stats_cache;
+			$flood_perm		=null;
+			$flowmod_limit		=null; //assoc array-> slice_name, dpid, limit
+			$track_flows		=null;
+			$stats_desc		=null;
+			$enable_topo_ctrl	=null;
+			$flow_stats_cache	=null;
 			// reslult associative array
 			$result = array("df"=>"False",
 				"ds"=>"False",
@@ -82,27 +82,26 @@
 
 			if($slice_list!=null&&count($slice_list)>0){
 				foreach($slice_list as $item){
-//var_dump($item);
-					// TODO: HERE - IF NAME=FVADMMIN, DO NOT DELETE!!!
 					if(strcmp($item,"fvadmin")==0){
 						print("found fvadmin, not deleting\n");
 					}else{
 						print("deleting ".$item."\n");
-//						$fv->deleteSlice($item);
+						$fv->deleteSlice($item);
 					}
 				}
 				$result['df']="True";
 			}else{
-				$result['df']="True";
+				$result['df']="False";
 			}
 
 			//----------------CREATE SLICES-----------------------------------
-				$result['is']="True";
+			$result['is']="True";
 			foreach($profile->children() as $level1){
+				$slice_name=null;$controller_url=null$admin_email=null;$pwd=null;$drop_policy=null;$recv_lldp=null;$flowmod_limit=null;$rate_limit=null;$admin_status=null;			
 				if(strcmp($level1->getName(),"slice")==0){
 					$att = 'name';
 					$slice_name = (string)$level1->attributes()->$att;
-					print("Creating: ".$slice_name);
+print("Creating: ".$slice_name);
 					$controller_url = (string)$level1->controller_url;
 					$admin_email = (string)$level1->admin_email;
 					$pwd = (string)$level1->password;
@@ -145,20 +144,37 @@
 					$stuff = $fv->createSlice($slice_name, $controller_url, $admin_email, 
 							$pwd, $drop_policy, $recv_lldp, 
 							$flowmod_limit, $rate_limit, $admin_status);
-//var_dump($stuff);						
-					
-				}else if(strcmp($level1->getName(),"config")==0){
-
+//var_dump($stuff);							
 				}
 //var_dump($fv->getSliceList());
 			}
-			
 
 			//----------------CREATE FLOWSPACES-----------------------------------
 
+			foreach($profile->children() as $level1){
+			$slice_name_fs=null;$dpid=null;$priority=null;$match=null;$queues=null;$force_enqueue=null;$slice_action=null;
+				if(strcmp($level1->getName(),"slice")==0){
+					$att = 'name';
+					$slice_name = (string)$level1->attributes()->$att;
+				
+					
+					$slice_name_fs;
+					$dpid;
+					$priority;
+					$match;
+					$queues;
+					$force_enqueue;
+					$slice_action;
+					
+				}
+			}
 			//----------------APPLY SETTINGS-----------------------------------
 
-
+			foreach($profile->children() as $level1){
+				if(strcmp($level1->getName(),"config")==0){
+					
+				}
+			}
 			
 			return $result;
 		}
@@ -335,23 +351,17 @@
 		// i.e. all the slice names from getSliceList() result
 		// and returns them in form of an array
 		public function getAttribute($array, $attribute){
-			$result=null;
+			$result=array();
 
 			foreach($array as $x=>$x_value){
 				if(strcmp($x,$attribute)==0){
-					if($result == null){
-						$result = array($x_value);
-					}else{
-						array_push($result,$x_value);
-					}
+					array_push($result,$x_value);
 				}
 				if(is_array($x_value)){
 					$temp = self::getAttribute($x_value,$attribute);
-					if($temp!=null){
-						if($result==null){
-							$result = $temp;
-						}else{
-							array_merge((array)$result, (array)$temp);
+					if(count($temp)>0){
+						foreach($temp as $y){
+							array_push($result, $y);
 						}
 					}
 				}
