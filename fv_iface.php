@@ -330,12 +330,13 @@ class fv_iface{
 		$request = array("jsonrpc"=>"2.0",
 			"method"=>$this->CREATE_FLOWSPACE,
 			"id"=>$request_count,
-			"params"=>$params);
-
+			"params"=>array($params));
+//var_dump($params);
 		//increase the request id count
 		$request_count++;
 		//encode the array in to a json string
 		$this->requestJson = json_encode($request);
+//var_dump($this->requestJson);
 		//send the json request
 		$result = $this->send($this->requestJson);
 		//decode the result and return it

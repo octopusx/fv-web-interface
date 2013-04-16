@@ -59,12 +59,13 @@
 			$flowspaces = array();
 
 			if($slice_ar==null || count($slice_ar)<=0){
-				$flowspaces = "<table border=1><tr><td>No Flowspaces Defined</td></tr></table>";
+				$flowspaces = "<table border=1><tr><td>No Slices, Hende No Flowspaces Defined</td></tr></table>";
+print("WTF!");
 			}else{
 				foreach($slice_ar as $x){
 					array_push($flowspaces_resp, $model->getFlowSpaces($x));
 				}
-				if($flowspaces_resp==null || !is_array($flowspaces_resp) || count($flowspaces_resp)<1 || $flowspaces_resp[0] == null|| strlen($flowspaces_resp[0])<1){
+				if($flowspaces_resp==null || !is_array($flowspaces_resp) || count($flowspaces_resp)<1 || $flowspaces_resp[0] == null){
 					$flowspaces = "<table border=1><tr><td>No Flowspaces Defined</td></tr></table>";
 				}else{
 					foreach($flowspaces_resp as $x){
@@ -83,7 +84,7 @@
 			$config = array();
 
 			if($slice_ar==null || count($slice_ar)<=0){
-				$flowspaces = "<table border=1><tr><td>No Slices With Settings</td><tr></table>";
+				$config = "<table border=1><tr><td>No Slices With Settings</td><tr></table>";
 			}else{
 				foreach($slice_ar as $x){
 					array_push($config_resp, $model->getConfig($x));
@@ -100,7 +101,7 @@
 			$sinfo = array();
 
 			if($slice_ar==null || count($slice_ar)<=0){
-				$flowspaces = "<table border=1><tr><td>No Slices</td></tr></table>";
+				$sinfo = "<table border=1><tr><td>No Slices</td></tr></table>";
 			}else{
 				foreach($slice_ar as $x){
 					array_push($sinfo_resp, $model->getSliceInfo($x));

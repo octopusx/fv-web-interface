@@ -14,8 +14,11 @@
 			<dpid>ff:ff:ff:ff:ff:ff:ff</dpid>
 			<priority>5</priority>
 			<match>tp_dst=80,tp_src=80</match>
-			<queues></queues>
-			<force_enqueue></force_enqueue>
+			<queues>
+				<id>0</id>
+				<id>1</id>
+			</queues>
+			<force_enqueue>0</force_enqueue>
 			<permission>7</permission>
 		</flowspace>
 	</slice>	

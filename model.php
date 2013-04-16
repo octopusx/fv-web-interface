@@ -72,7 +72,7 @@
 					$flowspace_name = self::getAttribute($item, "name");
 					$fv->removeFlowspace($flowspace_name);
 				}
-				$result['ds']="True";
+				$result['ds']="True";//TODO: why are both if and else making it true?
 			}else{
 				$result['ds']="True";			
 			}
@@ -83,9 +83,9 @@
 			if($slice_list!=null&&count($slice_list)>0){
 				foreach($slice_list as $item){
 					if(strcmp($item,"fvadmin")==0){
-						print("found fvadmin, not deleting\n");
+//						print("found fvadmin, not deleting\n");
 					}else{
-						print("deleting ".$item."\n");
+//						print("deleting ".$item."\n");
 						$fv->deleteSlice($item);
 					}
 				}
@@ -97,11 +97,11 @@
 			//----------------CREATE SLICES-----------------------------------
 			$result['is']="True";
 			foreach($profile->children() as $level1){
-				$slice_name=null;$controller_url=null$admin_email=null;$pwd=null;$drop_policy=null;$recv_lldp=null;$flowmod_limit=null;$rate_limit=null;$admin_status=null;			
+				$slice_name=null;$controller_url=null;$admin_email=null;$pwd=null;$drop_policy=null;$recv_lldp=null;$flowmod_limit=null;$rate_limit=null;$admin_status=null;			
 				if(strcmp($level1->getName(),"slice")==0){
 					$att = 'name';
 					$slice_name = (string)$level1->attributes()->$att;
-print("Creating: ".$slice_name);
+//print("Creating: ".$slice_name);
 					$controller_url = (string)$level1->controller_url;
 					$admin_email = (string)$level1->admin_email;
 					$pwd = (string)$level1->password;
@@ -138,39 +138,67 @@ print("Creating: ".$slice_name);
 
 					if($slice_name==null || $controller_url==null || $admin_email==null || $pwd==null){
 						$result['is']="False";
-						return $result;
-					}
-
-					$stuff = $fv->createSlice($slice_name, $controller_url, $admin_email, 
+					}else{
+						$stuff = $fv->createSlice($slice_name, $controller_url, $admin_email, 
 							$pwd, $drop_policy, $recv_lldp, 
 							$flowmod_limit, $rate_limit, $admin_status);
-//var_dump($stuff);							
+//var_dump($stuff);
+					}
 				}
 //var_dump($fv->getSliceList());
 			}
 
 			//----------------CREATE FLOWSPACES-----------------------------------
 
-			foreach($profile->children() as $level1){
-			$slice_name_fs=null;$dpid=null;$priority=null;$match=null;$queues=null;$force_enqueue=null;$slice_action=null;
-				if(strcmp($level1->getName(),"slice")==0){
+			$result['if']="True";
+			foreach($profile->children() as $slice){
+				$slice_name_fs=null;$dpid=null;$priority=null;$match=null;$queues=null;$force_enqueue=null;$slice_action=null;
+				if(strcmp($slice->getName(),"slice")==0){
 					$att = 'name';
-					$slice_name = (string)$level1->attributes()->$att;
-				
-					
-					$slice_name_fs;
-					$dpid;
-					$priority;
-					$match;
-					$queues;
-					$force_enqueue;
-					$slice_action;
-					
+					$slice_name = (string)$slice->attributes()->$att;	
+//var_dump($slice_name);					
+					foreach($slice->children() as $flowspace){
+						if(strcmp($flowspace->getName(),"flowspace")==0){
+
+							$att2 = 'name';
+							$slice_name_fs = (string)$flowspace->attributes()->$att2;
+//var_dump($slice_name_fs);
+							$dpid = (string)$flowspace->dpid;
+//var_dump($dpid);
+							$priority = (int)$flowspace->priority;//check for int
+//var_dump($priority);
+							$match = (string)$flowspace->match;
+							$match = array("tp_dst"=>80,"tp_src"=>80);
+//var_dump($match);
+							$queues = $flowspace->queues;//array of queue ids, i presume strings, TODO: test once sorted
+							$qarray = array();
+							foreach($queues->children() as $item){//this needs testing
+								array_push($qarray,(string)$item->id);
+							}
+							$queues = $qarray;
+//var_dump($queues);
+							$force_enqueue = (string)$flowspace->force_enqueue;//single queue id, i presume string, TODO: test once sorted
+//var_dump($force_enqueue);
+							$slice_action = array();
+							array_push($slice_action,array("slice-name"=>$slice_name,"permission"=>(int)$flowspace->permission));
+							//complicated, this needs to be an array with 1 pair of items in an array
+//var_dump($slice_action);
+						
+							if($slice_name==null || $slice_name_fs==null || $dpid==null || $priority==null){
+								$result['if']="False";
+							}else{
+								$stuff = $fv->addFlowspace($slice_name_fs,$dpid, $priority, 
+									$match, null, null, $slice_action);
+var_dump($stuff);				
+							}
+						}
+					}
 				}
 			}
 			//----------------APPLY SETTINGS-----------------------------------
 
 			foreach($profile->children() as $level1){
+				$flood_perm=null;$flowmod_limit=null;$track_flows=null;$stats_desc=null;$enable_topo_ctrl=null;$flow_stats_cache=null;
 				if(strcmp($level1->getName(),"config")==0){
 					
 				}
