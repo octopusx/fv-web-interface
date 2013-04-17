@@ -189,22 +189,68 @@
 							}else{
 								$stuff = $fv->addFlowspace($slice_name_fs,$dpid, $priority, 
 									$match, null, null, $slice_action);
-var_dump($stuff);				
+//var_dump($stuff);				
 							}
 						}
 					}
 				}
 			}
 			//----------------APPLY SETTINGS-----------------------------------
-
-			foreach($profile->children() as $level1){
+			// Each setting must be applied separately, since each of the values can be accepted by the flowvisor multiple times, just not at once
+			foreach($profile->children() as $config){
 				$flood_perm=null;$flowmod_limit=null;$track_flows=null;$stats_desc=null;$enable_topo_ctrl=null;$flow_stats_cache=null;
-				if(strcmp($level1->getName(),"config")==0){
-					
+				if(strcmp($config->getName(),"config")==0){
+					$flood_perm = $config->flood_perm;//this should also be an assoc array, but till leave it as is for now
+					$flowmod_limit = $config->flowmod_limit;//this will be an assoc array
+					$flowmod_limit_rules = array();
+					foreach($flowmod_limit->children() as $rule){
+						$item = array();
+						$slice = (string)$rule->slice;$dpid = (string)$rule->dpid;$limit=(int)$rule->limit;
+//var_dump($slice);var_dump($dpid);var_dump($limit);
+						$temp1 = array("slice-name"=>$slice);
+						$temp2 = array("dpid"=>$dpid);
+						$temp3 = array("limit"=>$limit);
+						$item = array_merge((array)$temp1,(array)$item);
+						$item = array_merge((array)$temp2,(array)$item);
+						$item = array_merge((array)$temp3,(array)$item);
+						array_push($flowmod_limit_rules, $item);
+					}
+					$track_flows = self::parseBoolean((string)$config->track_flows);
+					$stats_desci = self::parseBoolean((string)$config->stats_desc);
+					$enable_topo_ctrl = self::parseBoolean((string)$config->enable_topo_ctrl);
+					$flow_stats_cache = (int)$config->flow_stats_cache;
+
+					$stuff = "";
+					if($flood_perm!=null){$stuff = $fv->setConfig($flood_perm,null,null,null,null,null);}
+//print("\n");var_dump($stuff);
+					if($flowmod_limit!=null && count($flowmod_limit_rules)>0){
+						foreach($flowmod_limit_rules as $item){	
+							$stuff = $fv->setConfig(null,$item,null,null,null,null);
+//print("\n");var_dump($stuff);
+						}
+					}
+					if($track_flows!=null){$stuff = $fv->setConfig(null,null,$track_flows,null,null,null);}
+//print("\n");var_dump($stuff);
+					if($stats_desc!=null){$stuff = $fv->setConfig(null,null,null,$stats_desc,null,null);}
+//print("\n");var_dump($stuff);
+					if($enable_topo_ctrl!=null){$stuff = $fv->setConfig(null,null,null,null,$enable_topo_ctrl,null);}
+//print("\n");var_dump($stuff);
+					if($flow_stats_cache!=null){$stuff = $fv->setConfig(null,null,null,null,null,$flow_stats_cache);}
+//print("\n");var_dump($stuff);
+					$result['set'] = "True";
 				}
 			}
-			
 			return $result;
+		}
+
+		private function parseBoolean($boolean){
+			if(strcmp($boolean,"true")==0 || strcmp($boolean,"True")==0){
+				return true;
+			}else if(strcmp($boolean,"false")==0 || strcmp($boolean,"False")==0){
+				return false;
+			}else{
+				return null;
+			}
 		}
 
         //---------------------------------------------------------------------------------

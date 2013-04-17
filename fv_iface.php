@@ -460,52 +460,41 @@ class fv_iface{
 			return null;
 		}
 
-		$params = null;
+		$params = array();
 			
 		if($flood_perm!=null){
-			$params = array("dpid"=>$dpid);
+//print("hello1");
+			$temp = array("slice-name"=>$flood_perm);
+			$params = array_merge((array)$params, (array)$temp);
 		}
-		
 		if($flowmod_limit!=null){
-			if($params!=null){
-				$temp = array("flowmod-limit"=>$flowmod_limit);
-				$params = array_merge((array)$params, (array)$temp);
-			}else{
-				$params = array("flowmod-limit"=>$flowmod_limit);
-			}
+//print("hello2");
+			$temp = array("flowmod-limit"=>$flowmod_limit);
+			$params = array_merge((array)$params, (array)$temp);
 		}
 		if($track_flows!=null){
-			if($params!=null){
-				$temp = array("track-flows"=>$track_flows);
-				$params = array_merge((array)$params, (array)$temp);
-			}else{
-				$params = array("track-flows"=>$track_flows);
-			}
+//print("hello3");
+			$temp = array("track_flows"=>$track_flows);
+			$params = array_merge((array)$params, (array)$temp);
 		}
 		if($stats_desc!=null){
-			if($params!=null){
-				$temp = array("stats-desc"=>$stats_desc);
-				$params = array_merge((array)$params, (array)$temp);
-			}else{
-				$params = array("state-desc"=>$stats_desc);
-			}
+//print("hello4");
+			$temp = array("stats-desc"=>$stats_desc);
+			$params = array_merge((array)$params, (array)$temp);
 		}
 		if($enable_topo_ctrl!=null){
-			if($params!=null){
-				$temp = array("enable-topo-ctrl"=>$emable_topo_ctrl);
-				$params = array_merge((array)$params, (array)$temp);
-			}else{
-				$params = array("enable-topo-ctrl"=>$enable_topo_ctrl);
-			}
+//print("hello5");
+			$temp = array("enable-topo-ctrl"=>$enable_topo_ctrl);
+			$params = array_merge((array)$params, (array)$temp);
 		}
 		if($flow_stats_cache!=null){
-			if($params!=null){
-				$temp = array("flow-stats-cache"=>$flow_stats_cache);
-				$params = array_merge((array)$params, (array)$temp);
-			}else{
-				$params = array("flow-state-cache"=>$flow_state_cache);
-			}
+//print("hello6");
+			$temp = array("flow-stats-cache"=>$flow_stats_cache);
+			$params = array_merge((array)$params, (array)$temp);
 		}
+//print("Params:");
+//var_dump($params);
+		if(count($params)<1){return null;}
 		//creating the request
 		$request = array("jsonrpc"=>"2.0",
 			"method"=>$this->SET_CONFIG,
