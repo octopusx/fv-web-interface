@@ -61,6 +61,24 @@
 			$profile = $xml->loadFile($filename);
 			if($profile==null){return $result;}
 			//----------------DELETE FLOWSPACES-----------------------------------
+			$slices_resp = self::getSliceList();
+			$slice_ar = self::getAttribute($slices_resp,"slice-name");
+			$flowspace_list = array();
+			foreach($slice_ar as $slice_name){
+				if(strcmp($slice_name,"fvadmin")!=0)
+var_dump($slice_name);
+					$fspaces = self::getFlowSpaces($slice_name);
+					array_push($flowspace_list,self::getAttribute($fspaces, "name"));
+				
+			}
+			foreach($flowspace_list as $fs_group){
+				foreach($fs_group as $fs_name){
+					$fv->removeFlowspace($fs_name[0]);
+				}
+//print("............\n");
+			}
+			$result['ds']="True";
+			/*
 			$flowspace_list = self::getFlowSpaces(null);
 			// here need to use the getAttribute and get the result.
 			// if the result is empty, then set 
@@ -76,6 +94,7 @@
 			}else{
 				$result['ds']="True";			
 			}
+			*/
 			//----------------DELETE SLICES-----------------------------------
 
 			$slice_list = self::getAttribute(self::getSliceList(),"slice-name");
@@ -167,8 +186,24 @@
 //var_dump($dpid);
 							$priority = (int)$flowspace->priority;//check for int
 //var_dump($priority);
-							$match = (string)$flowspace->match;
-							$match = array("tp_dst"=>80,"tp_src"=>80);
+							$match_rules = $flowspace->match;
+//var_dump($match_rules);
+							$match = array();
+							foreach($match_rules->children() as $rule){
+//print("RULE::$rule");						
+								$r_name = (string)$rule->name;
+								$r_val = (string)$rule->value;
+								if(is_numeric($r_val)){
+									$r_val = (double)$rule->value;
+								}
+
+								$temp = array($r_name=>$r_val);
+var_dump($temp);
+								$match = array_merge($match, $temp);
+							}
+							
+//							$match = (string)$flowspace->match;
+//							$match = array("tp_dst"=>80,"tp_src"=>80);
 //var_dump($match);
 							$queues = $flowspace->queues;//array of queue ids, i presume strings, TODO: test once sorted
 							$qarray = array();
@@ -189,7 +224,7 @@
 							}else{
 								$stuff = $fv->addFlowspace($slice_name_fs,$dpid, $priority, 
 									$match, null, null, $slice_action);
-//var_dump($stuff);				
+var_dump($stuff);				
 							}
 						}
 					}

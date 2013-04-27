@@ -213,8 +213,9 @@ print("WTF!");
 
 		public function loadConfig(){
 			global $model;
-
-			$filename = $model->getProfileList()[$_GET['xml']];
+			
+			$filename = $model->getProfileList();
+			$filename = $filename[$_GET['xml']];
 			$result = $model->loadConfig($filename);
 			$delete_flowspaces = "Flowspaces Deleted: ".$result['df'];
 			$delete_slices = "Slices Deleted: ".$result['ds'];

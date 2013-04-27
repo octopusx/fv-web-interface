@@ -34,6 +34,7 @@ class fv_iface{
 	private $pwd;// = "flowvisor";
 	private $serv;// = "https://192.168.0.9:8080";
 
+//	private $settings;
 
 	// basic constructor
 	public function __construct(){
@@ -41,7 +42,8 @@ class fv_iface{
 		$request_count = 0;
 		$user = "fvadmin";
 		$pwd = "flowvisor";
-		$serv = "https://192.168.0.2:8080";
+		$serv = "https://127.0.0.1:8080";
+//		$settings = new xml_iface("./xml/");
 	}
 
 	//---------------------------------------------------------------------------------
@@ -262,14 +264,14 @@ class fv_iface{
 				$params = array_merge((array)$params, (array)$temp);
 			}
 		}
+var_dump($params);
 
 		//creating the request 
 		if($params==null){
 			$params = (object)'';
 			$request = array("jsonrpc"=>"2.0",
 				"method"=>$this->GET_FLOWSPACE_LIST,
-				"id"=>$request_count,
-				"params"=>$params);
+				"id"=>$request_count);
 			
 		}else{
 			$request = array("jsonrpc"=>"2.0",
@@ -359,14 +361,16 @@ class fv_iface{
 		$request = array("jsonrpc"=>"2.0",
 			"method"=>$this->REMOVE_FLOWSPACE,
 			"id"=>$request_count,
-			"params"=>$params);
+			"params"=>array($params));
 
 		//increase the request id count
 		$request_count++;
 		//encode the array in to a json string
 		$this->requestJson = json_encode($request);
+//print "request: ";var_dump($request);
 		//send the json request
 		$result = $this->send($this->requestJson);
+//print "result: $result \n";
 		//decode the result and return it
 		return json_decode($result,true);
 	}
@@ -865,8 +869,13 @@ class fv_iface{
 
 	//this function will be used to post the json messages to the api
 	public function send($json){
-		global $serv, $pwd, $user, $request_count;
-		$time1 = time();
+		global $serv, $pwd, $user, $request_count, $settings;
+//		$time1 = time();
+//		$settings = new xml_iface("./xml/");
+
+//		$user = $settings->getName();
+//		$pwd = $settings->getPassword();
+//		$serv = $settings->getAddress();
 		//initialise the curl connection on the flowvisor api address
 		$ch = curl_init($serv);
 		//set the connection in "POST" mode
@@ -891,14 +900,15 @@ class fv_iface{
 		if (curl_errno($ch)) {
 			print curl_error($ch);
 		} else {
-			//echo "curl closing";
+//			echo "curl closing";
 			curl_close($ch);
 		}
-var_dump($request_count);
+//var_dump($request_count);
 //		DEBUG
-//		print "result: $result <br>";
-		$time2 = time();
-		$time1 = $time2-$time1;
+//print "json: $user <br>";
+//print "result: $result <br>";
+//		$time2 = time();
+//		$time1 = $time2-$time1;
 //		print "time:".$time1."</br>";
 		return $result;
 	}

@@ -1,26 +1,54 @@
 <?xml version="1.0" encoding="ISO-8859-1"?>
 <profile>
-	<slice name="slice1">
+	<slice name="general_traffic">
 		<controller_url>tcp:127.0.0.1:6634</controller_url>
 		<admin_email>octopusx@o2.pl</admin_email>
 		<password>password</password>
 		<drop_policy>exact</drop_policy>
 		<receive_lldp>true</receive_lldp>
 		<flowmod_limit>-1</flowmod_limit>
-		<rate_limit>10000</rate_limit>
+		<rate_limit>-1</rate_limit>
 		<admin_status>true</admin_status>
 		
-		<flowspace name="fs4">
+		<flowspace name="ip">
 			<dpid>00:00:00:00:00:00:00:01</dpid>
 			<priority>1</priority>
 			<match>
 				<rule>
-					<name>tp_dst</name>
-					<value>90</value>
+					<name>dl_type</name>
+					<value>2048</value>
 				</rule>
+			</match>
+			<queues>
+				<id>0</id>
+				<id>1</id>
+			</queues>
+			<force_enqueue>0</force_enqueue>
+			<permission>7</permission>
+		</flowspace>
+		<flowspace name="arp">
+			<dpid>00:00:00:00:00:00:00:01</dpid>
+			<priority>1</priority>
+			<match>
 				<rule>
-					<name>tp_src</name>
-					<value>90</value>
+					<name>dl_type</name>
+					<value>2054</value>
+				</rule>
+			</match>
+			<queues>
+				<id>0</id>
+				<id>1</id>
+			</queues>
+			<force_enqueue>0</force_enqueue>
+			<permission>7</permission>
+		</flowspace>
+		<flowspace name="rarp">
+			<dpid>00:00:00:00:00:00:00:01</dpid>
+			<priority>1</priority>
+			<match>
+				<rule>
+					<name>dl_type</name>
+					<value>32821</value>
 				</rule>
 			</match>
 			<queues>

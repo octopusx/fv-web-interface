@@ -8,31 +8,34 @@
 	<p>This is the index page of the server.</p>
 	<p>It is used to test any functionalities implemented in this project.</p>
 	<?php
+		/*
 		exec("pgrep gedit", $output, $return);
 		if ($return == 0) {
 		    echo "Ok, process is running<br>\n";
 		}
-
+*/
 		$fv_test = new fv_iface;
-		var_dump($fv_test->createSlice("test","tcp:6633","octopusx@o2.pl","pass","exact",false,-1,-1,true));
+//		var_dump($fv_test->createSlice("test","tcp:6633","octopusx@o2.pl","pass","exact",false,-1,-1,true));
+		
 	?><br><br>
 	<?
-		var_dump($fv_test->getSliceList());
+//		var_dump($fv_test->getSliceList());
 	?><br><br>
 	<?
-		var_dump($fv_test->updateSlice("test",null,6634,"octopusx@o2.pl",null,null,null,null,null));
+//		var_dump($fv_test->updateSlice("test",null,6634,"octopusx@o2.pl",null,null,null,null,null));
 	?><br><br>
 	<?
-		var_dump($fv_test->getSliceList());
+//		var_dump($fv_test->getSliceList());
 	?><br><br>
 	<?
-		var_dump($fv_test->updateSlicePassword("test","dupa"));
+//		var_dump($fv_test->updateSlicePassword("test","dupa"));
 	?><br><br>
 	<?
-		var_dump($fv_test->getFlowspace("test",null));
+//		var_dump($fv_test->getFlowspace("test",null));
 	?><br><br>
 	<?
-		var_dump($fv_test->deleteSlice("test"));
+		var_dump($fv_test->removeFlowspace("flowspace1"));
+//		var_dump($fv_test->deleteSlice("slice1"));
 
 	?>
 </body></html>
